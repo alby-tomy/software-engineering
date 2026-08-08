@@ -12,6 +12,7 @@ import { SystemDesignPractice } from './pages/SystemDesignPractice';
 import { Quiz } from './pages/Quiz';
 import { VideoLibrary } from './pages/VideoLibrary';
 import { SixMonthCourse } from './pages/SixMonthCourse';
+import { CapstoneProject } from './pages/CapstoneProject';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/daily-plan" element={<DailyPlan />} />
           <Route path="/course" element={<SixMonthCourse />} />
+          <Route path="/capstone" element={<CapstoneProject />} />
           <Route path="/system-design-practice" element={<SystemDesignPractice />} />
           <Route path="/system-design-practice/:problemId" element={<SystemDesignPractice />} />
           <Route path="/quiz/:moduleId" element={<Quiz />} />

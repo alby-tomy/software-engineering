@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { sixMonthCourse } from '../data/six-month-course';
+import { capstoneProject } from '../data/capstone-project';
 import { getModule } from '../data/modules';
 import './SixMonthCourse.css';
 
@@ -17,11 +18,11 @@ export function SixMonthCourse() {
           <strong>Outcome:</strong> {sixMonthCourse.targetOutcome}
         </p>
         <div className="course-cta">
-          <Link to="/daily-plan" className="cta-primary">
-            Start Week 1 Daily Plan →
+          <Link to="/capstone" className="cta-primary">
+            🚨 Start PulseGrid Capstone →
           </Link>
-          <Link to="/paths#six-month-mastery" className="cta-secondary">
-            View as Learning Path
+          <Link to="/daily-plan" className="cta-secondary">
+            📅 Today's Study Plan
           </Link>
         </div>
       </header>
@@ -80,6 +81,17 @@ export function SixMonthCourse() {
             </article>
           ))}
         </div>
+      </section>
+
+      <section className="ai-highlight capstone-highlight">
+        <h2>🚨 Capstone: {capstoneProject.name}</h2>
+        <p>
+          Build a production-grade AI-powered incident response platform over 24 weeks.
+          Each week adds one feature to PulseGrid — tied directly to the modules you study.
+        </p>
+        <Link to="/capstone" className="course-banner-link">
+          Start Week 1 of the capstone project →
+        </Link>
       </section>
 
       <section className="ai-highlight">

@@ -29,6 +29,9 @@ export function Sidebar({ currentModuleId, onClose, isOpen }: SidebarProps) {
         <Link to="/dashboard" className="nav-item" onClick={onClose}>
           📊 Dashboard
         </Link>
+        <Link to="/capstone" className="nav-item" onClick={onClose}>
+          🚨 Capstone Project
+        </Link>
         <Link to="/course" className="nav-item" onClick={onClose}>
           🎓 6-Month Course
         </Link>

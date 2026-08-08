@@ -6,6 +6,7 @@ import { videoLessons } from '../data/concept-videos';
 import { detailedConcepts } from '../data/detailed-concepts';
 import { getDetailedLessonCount } from '../data/detailed-lessons';
 import { sixMonthCourse } from '../data/six-month-course';
+import { capstoneProject } from '../data/capstone-project';
 import { useProgress } from '../hooks/useProgress';
 import './Home.css';
 
@@ -58,6 +59,16 @@ export function Home() {
           </div>
         </div>
       </header>
+
+      <section className="home-section capstone-banner">
+        <div className="capstone-banner-content">
+          <h2>🚨 Capstone: {capstoneProject.name}</h2>
+          <p>{capstoneProject.tagline}. Build it step-by-step over 24 weeks — every concept applied to a real incident response platform.</p>
+          <Link to="/capstone" className="capstone-banner-link">
+            View 24-week build plan →
+          </Link>
+        </div>
+      </section>
 
       <section className="home-section course-banner">
         <div className="course-banner-content">

@@ -5,6 +5,7 @@ import { getModuleQuiz } from '../data/practice';
 import { getVideosByModule } from '../data/concept-videos';
 import { getConceptsByModule } from '../data/detailed-concepts';
 import { getDetailedLesson, hasDetailedLesson } from '../data/detailed-lessons';
+import { getCapstoneStepsForModule } from '../data/capstone-project';
 import { wrapSectionAsLesson } from '../data/content-format';
 import { useProgress } from '../hooks/useProgress';
 import { MarkdownContent } from '../components/MarkdownContent';
@@ -40,6 +41,7 @@ export function ModulePage() {
   const hasQuiz = getModuleQuiz(module.id).length > 0;
   const moduleVideos = getVideosByModule(module.id);
   const moduleConcepts = getConceptsByModule(module.id);
+  const moduleCapstoneSteps = getCapstoneStepsForModule(module.id);
   const hasVideos = moduleVideos.length > 0 || moduleConcepts.length > 0;
 
   return (
@@ -69,6 +71,22 @@ export function ModulePage() {
                 <li key={i}>{obj}</li>
               ))}
             </ul>
+          </div>
+        )}
+        {moduleCapstoneSteps.length > 0 && (
+          <div className="capstone-module-box">
+            <strong>🚨 PulseGrid Capstone — Project Steps in This Module</strong>
+            <p>Apply what you learn by building the real-world incident platform step by step:</p>
+            <ul>
+              {moduleCapstoneSteps.map((step) => (
+                <li key={step.id}>
+                  <Link to={`/capstone#week-${step.week}`}>
+                    Week {step.week}: {step.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <Link to="/capstone" className="capstone-module-link">View full 24-week project →</Link>
           </div>
         )}
       </div>

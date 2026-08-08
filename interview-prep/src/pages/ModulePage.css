@@ -76,6 +76,39 @@
   color: var(--text-secondary);
 }
 
+.capstone-module-box {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, var(--bg-secondary) 100%);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: 10px;
+  padding: 1rem;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+.capstone-module-box p {
+  color: var(--text-secondary);
+  margin: 0.5rem 0;
+}
+
+.capstone-module-box ul {
+  margin: 0.5rem 0 0.75rem 1.25rem;
+}
+
+.capstone-module-box li {
+  margin-bottom: 0.35rem;
+}
+
+.capstone-module-link {
+  color: #ef4444;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+
+.capstone-module-link:hover {
+  text-decoration: underline;
+}
+
 .module-tabs {
   display: flex;
   gap: 0.25rem;
