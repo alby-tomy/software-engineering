@@ -35,7 +35,7 @@ export function ModulePage() {
   const section = module.sections[activeSection];
   const isDeepLesson = section ? hasDetailedLesson(module.id, section.id) : false;
   const lessonContent = section
-    ? getDetailedLesson(module.id, section.id) ?? wrapSectionAsLesson(section.title, section.content)
+    ? getDetailedLesson(module.id, section.id) ?? wrapSectionAsLesson(section.title, section.content, module.title)
     : '';
   const hasQuiz = getModuleQuiz(module.id).length > 0;
   const moduleVideos = getVideosByModule(module.id);
@@ -122,7 +122,7 @@ export function ModulePage() {
                 <h2>{section.title}</h2>
                 {isDeepLesson && (
                   <p className="lesson-mode-badge">
-                    📚 Deep lesson — extended Q&amp;A tutoring content
+                    📖 Textbook chapter — in-depth study material
                   </p>
                 )}
                 <MarkdownContent content={lessonContent} />

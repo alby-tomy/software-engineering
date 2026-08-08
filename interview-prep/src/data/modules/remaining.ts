@@ -366,19 +366,212 @@ export const git = createModule({
   stage: 7,
   level: 'beginner',
   icon: '📦',
-  description: 'Beyond add/commit/push — branching strategies, rebase, recovery, and production workflows.',
-  estimatedHours: 10,
-  learningObjectives: ['Use rebase, cherry-pick, bisect, and reflog confidently', 'Handle merge conflicts and production hotfixes', 'Maintain clean git history'],
+  description:
+    'Master version control from first commit to production workflows — branching strategies, pull requests, rebase, recovery, and team collaboration.',
+  estimatedHours: 14,
+  learningObjectives: [
+    'Explain how Git stores snapshots, branches, and commits as a DAG',
+    'Use branching workflows (trunk-based, Gitflow) in team environments',
+    'Resolve merge conflicts, rebase feature branches, and recover lost work with reflog',
+    'Run effective code reviews and maintain clean commit history',
+  ],
   sections: [
-    { id: 'workflows', title: 'Branching & Workflows', content: `Feature branches → PR → review → merge. Hotfix: branch from main, fix, merge to main AND develop. Gitflow vs trunk-based development. Rebase for clean history on feature branches. Merge for preserving history on main.` },
-    { id: 'recovery', title: 'Recovery & Debugging', content: `Reflog: recover "lost" commits. git bisect: find bug-introducing commit. git revert: safe undo (creates new commit). git reset: move branch pointer (dangerous on shared branches).` },
+    {
+      id: 'fundamentals',
+      title: 'Git Fundamentals — How Version Control Works',
+      content: `### What Git actually stores
+Git doesn't store file diffs — it stores **snapshots** of your project at each commit. Each commit points to a tree of files (blobs) and has a parent commit, forming a **directed acyclic graph (DAG)**.
+
+### Core objects
+- **Blob** — file content
+- **Tree** — directory listing (name → blob or tree)
+- **Commit** — snapshot + metadata (author, message, parent)
+- **Tag** — named pointer to a commit (releases)
+
+### Three areas of your repo
+1. **Working directory** — files you edit
+2. **Staging area (index)** — what goes in the next commit (\`git add\`)
+3. **Repository (.git)** — committed history
+
+### Essential commands
+\`\`\`bash
+git init / git clone <url>     # start or copy repo
+git status                      # what's changed
+git add <file> / git add -p     # stage changes (patch mode for hunks)
+git commit -m "message"         # snapshot staged changes
+git log --oneline --graph       # visual history
+git diff / git diff --staged    # unstaged vs staged changes
+\`\`\`
+
+### .gitignore
+Never commit: \`.env\`, \`node_modules/\`, \`__pycache__/\`, build artifacts, IDE configs with secrets. Use global gitignore for OS files (\`.DS_Store\`).`,
+    },
+    {
+      id: 'collaboration',
+      title: 'Collaboration — Remotes, PRs & Code Review',
+      content: `### Remotes
+\`\`\`bash
+git remote -v                    # list remotes
+git fetch origin                 # download commits (doesn't merge)
+git pull = fetch + merge         # update local branch
+git push origin feature-branch   # upload commits
+\`\`\`
+
+### Pull Requests (PRs) / Merge Requests
+The standard team workflow:
+1. Create feature branch from \`main\`
+2. Make commits with clear messages
+3. Push branch and open PR
+4. CI runs tests automatically
+5. Teammates review code
+6. Address feedback, push more commits
+7. Squash-merge or merge to \`main\`
+
+### Good commit messages
+\`\`\`
+feat(auth): add OAuth2 login with Google provider
+
+- Implement authorization code flow
+- Store refresh tokens encrypted in DB
+- Add logout endpoint that revokes tokens
+
+Closes #142
+\`\`\`
+
+Format: \`type(scope): summary\` — types: feat, fix, docs, refactor, test, chore.
+
+### Code review checklist
+- Does it solve the right problem?
+- Are edge cases handled?
+- Tests added/updated?
+- Security implications (SQL injection, auth bypass)?
+- Performance impact?
+- Readable naming and structure?`,
+    },
+    {
+      id: 'workflows',
+      title: 'Branching Strategies & Workflows',
+      content: `### Trunk-based development (recommended for most teams)
+- Short-lived feature branches (< 2 days)
+- Frequent merges to \`main\`
+- Feature flags hide incomplete work
+- \`main\` is always deployable
+
+### Gitflow (legacy, larger releases)
+- \`main\` = production, \`develop\` = integration
+- Feature branches → develop → release branches → main
+- Hotfix branches from main
+- More overhead; suits scheduled releases
+
+### Branch naming conventions
+\`feature/user-auth\`, \`fix/login-redirect\`, \`hotfix/payment-crash\`, \`chore/upgrade-deps\`
+
+### Merge vs Rebase
+| | Merge | Rebase |
+|---|-------|--------|
+| History | Preserves branches | Linear history |
+| When | Merging to main/shared branches | Cleaning up feature branch before merge |
+| Risk | Merge commits clutter | Rewrites history — **never rebase shared branches** |
+
+\`\`\`bash
+# Update feature branch with latest main
+git checkout feature/my-work
+git rebase main          # replay your commits on top of main
+# or
+git merge main           # merge main into feature branch
+\`\`\`
+
+### Protected branches
+Configure on GitHub/GitLab: require PR reviews, passing CI, no force-push on \`main\`.`,
+    },
+    {
+      id: 'advanced',
+      title: 'Advanced Git — Rebase, Cherry-pick & Stash',
+      content: `### Interactive rebase — clean up commits before PR
+\`\`\`bash
+git rebase -i HEAD~3    # edit last 3 commits
+# pick, squash, fixup, reword, drop
+\`\`\`
+
+Squash WIP commits into one clean commit before merging.
+
+### Cherry-pick — apply specific commit elsewhere
+\`\`\`bash
+git cherry-pick abc1234   # apply commit to current branch
+\`\`\`
+Use case: hotfix on main needs to go to release branch too.
+
+### Stash — save work in progress
+\`\`\`bash
+git stash push -m "WIP auth refactor"
+git stash list
+git stash pop              # apply and remove
+git stash apply stash@{0}  # apply, keep stash
+\`\`\`
+
+### Tags for releases
+\`\`\`bash
+git tag -a v1.2.0 -m "Release 1.2.0"
+git push origin v1.2.0
+\`\`\`
+
+Annotated tags store metadata; lightweight tags are just pointers.`,
+    },
+    {
+      id: 'recovery',
+      title: 'Recovery, Debugging & Production Hotfixes',
+      content: `### Reflog — your safety net
+\`\`\`bash
+git reflog              # every HEAD movement (even "deleted" commits)
+git checkout abc1234    # recover lost commit
+\`\`\`
+
+Reflog keeps ~90 days of history locally.
+
+### git bisect — find the bug-introducing commit
+\`\`\`bash
+git bisect start
+git bisect bad            # current commit is broken
+git bisect good v1.0.0    # this old tag worked
+# Git checks out middle commit — test, mark good/bad, repeat
+git bisect reset
+\`\`\`
+
+### Undo strategies
+| Command | Effect | Safe on shared branch? |
+|---------|--------|------------------------|
+| \`git revert <commit>\` | New commit that undoes changes | ✅ Yes |
+| \`git reset --soft HEAD~1\` | Undo commit, keep changes staged | ⚠️ Only if not pushed |
+| \`git reset --hard HEAD~1\` | Destroy commit and changes | ❌ Dangerous |
+
+### Production hotfix workflow
+1. Branch from \`main\` (or production tag): \`hotfix/critical-bug\`
+2. Fix, test, open PR with expedited review
+3. Merge to \`main\`, deploy immediately
+4. Cherry-pick or merge to \`develop\` / active release branches
+5. Tag release: \`v1.2.1\`
+6. Post-mortem if needed`,
+    },
   ],
   questions: [
     { id: 'git-q1', level: 'understanding', question: 'Merge vs rebase?', answer: 'Merge: preserves history, creates merge commit. Rebase: replays commits on top of target, linear history. Rebase feature branches before merging. Never rebase shared/public branches.' },
     { id: 'git-q2', level: 'application', question: 'How do you handle a production hotfix?', answer: 'Branch from main (or tag). Fix and test. Merge to main, deploy. Cherry-pick or merge to develop. Tag release. Post-mortem if needed.' },
+    { id: 'git-q3', level: 'debugging', question: 'You accidentally ran git reset --hard and lost commits. How do you recover?', answer: 'git reflog shows all HEAD movements. Find the commit hash before the reset. git checkout <hash> or git reset --hard <hash> to restore. Reflog is local and time-limited (~90 days).' },
+    { id: 'git-q4', level: 'tradeoffs', question: 'Trunk-based vs Gitflow — when to use each?', answer: 'Trunk-based: continuous delivery, short branches, feature flags. Default for most modern teams. Gitflow: scheduled releases, separate develop branch, more ceremony. Use when release cadence is weeks/months and multiple versions maintained.' },
+    { id: 'git-q5', level: 'production', question: 'What should be in a good commit message?', answer: 'Imperative mood subject line (<72 chars). Blank line. Body explaining what and why (not how). Reference issue tracker. Types: feat, fix, docs, refactor, test, chore. Enables meaningful changelogs and git bisect.' },
   ],
-  seniorScenarios: [],
-  resources: [{ title: 'Pro Git Book', url: 'https://git-scm.com/book', type: 'book' }],
+  seniorScenarios: [
+    {
+      title: 'Merge conflict during release',
+      scenario: 'Two teams merged features that both modified the same config file. CI passes on each branch but merge to main has conflicts.',
+      approach: 'Pull latest main into both branches early and often. For conflict: communicate with both authors, understand intent, resolve manually, run full test suite. Consider CODEOWNERS for critical files.',
+      keyConsiderations: ['Don\'t blindly accept one side', 'Run integration tests after resolution', 'Prevent with smaller PRs and frequent merges'],
+    },
+  ],
+  resources: [
+    { title: 'Pro Git Book', url: 'https://git-scm.com/book', type: 'book' },
+    { title: 'GitHub Flow Guide', url: 'https://docs.github.com/en/get-started/using-github/github-flow', type: 'documentation' },
+  ],
 });
 
 export const docker = createModule({

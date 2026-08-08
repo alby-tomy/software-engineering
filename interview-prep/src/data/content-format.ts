@@ -1,5 +1,7 @@
 /** Helpers to build conversational lesson markdown (student asks → mentor explains). */
 
+import { wrapSectionAsTextbook } from './textbook-format';
+
 export function youAsk(question: string): string {
   return `#### 🧑‍💻 You ask\n\n> ${question}\n`;
 }
@@ -25,36 +27,40 @@ export function interviewTip(text: string): string {
 }
 
 export function buildLesson(parts: {
+  chapter?: string;
   intro?: string;
   dialogues: { q: string; a: string }[];
   takeaways?: string[];
   tip?: string;
 }): string {
   const chunks: string[] = [];
-  if (parts.intro) chunks.push(lessonIntro(parts.intro));
+
+  if (parts.chapter) {
+    chunks.push(`# ${parts.chapter}\n\n`);
+  }
+  if (parts.intro) {
+    chunks.push(`## Chapter Overview\n\n${parts.intro}\n\n---\n\n`);
+  }
+  chunks.push(`## In-Depth Explanation\n\n`);
+  chunks.push(
+    `This section uses a **guided study format** — read each question as if you asked it in class, then study the mentor's detailed answer like textbook exposition.\n\n---\n\n`
+  );
+
   for (const d of parts.dialogues) {
     chunks.push(dialogue(d.q, d.a));
   }
   if (parts.takeaways?.length) chunks.push(keyTakeaways(parts.takeaways));
   if (parts.tip) chunks.push(interviewTip(parts.tip));
+  chunks.push(`\n---\n\n## Chapter Summary\n\n`);
+  if (parts.takeaways?.length) {
+    chunks.push(parts.takeaways.map((p) => `- ${p}`).join('\n'));
+  } else {
+    chunks.push(`- Review the key concepts above and explain them in your own words.\n- Complete the module quiz and practice questions.\n`);
+  }
   return chunks.join('\n');
 }
 
-/** Wrap short module sections in Q&A format when no dedicated deep lesson exists. */
-export function wrapSectionAsLesson(title: string, content: string): string {
-  return buildLesson({
-    intro:
-      'This lesson uses a **tutoring format**: you ask the question, the mentor explains in depth. Read each exchange carefully — this is your primary study material.',
-    dialogues: [
-      {
-        q: `I'm studying "${title}". Can you walk me through everything I need to know for interviews?`,
-        a: content,
-      },
-      {
-        q: 'How should I practice this so it sticks?',
-        a: `After reading, close the tab and **explain "${title}" out loud** in 2 minutes as if teaching a junior engineer. Then open the **Questions** tab in this module and answer 3 questions without looking. If you have a **Practical Exercise** below, do it — building beats reading.`,
-      },
-    ],
-    tip: 'Sections with a "Deep lesson" badge have extended Q&A content written specifically for interview depth. All sections use this tutoring format.',
-  });
+/** Wrap short module sections in textbook chapter format when no dedicated deep lesson exists. */
+export function wrapSectionAsLesson(title: string, content: string, moduleTitle?: string): string {
+  return wrapSectionAsTextbook(title, content, moduleTitle);
 }
