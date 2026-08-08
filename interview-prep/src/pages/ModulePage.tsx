@@ -4,7 +4,8 @@ import { getModule } from '../data/modules';
 import { getModuleQuiz } from '../data/practice';
 import { getVideosByModule } from '../data/concept-videos';
 import { getConceptsByModule } from '../data/detailed-concepts';
-import { getDetailedLesson } from '../data/detailed-lessons';
+import { getDetailedLesson, hasDetailedLesson } from '../data/detailed-lessons';
+import { wrapSectionAsLesson } from '../data/content-format';
 import { useProgress } from '../hooks/useProgress';
 import { MarkdownContent } from '../components/MarkdownContent';
 import { CodeBlock } from '../components/CodeBlock';
@@ -32,10 +33,10 @@ export function ModulePage() {
 
   const progress = getModuleProgress(module.id, module.sections.length);
   const section = module.sections[activeSection];
-  const lessonContent =
-    section && getDetailedLesson(module.id, section.id)
-      ? getDetailedLesson(module.id, section.id)!
-      : section?.content ?? '';
+  const isDeepLesson = section ? hasDetailedLesson(module.id, section.id) : false;
+  const lessonContent = section
+    ? getDetailedLesson(module.id, section.id) ?? wrapSectionAsLesson(section.title, section.content)
+    : '';
   const hasQuiz = getModuleQuiz(module.id).length > 0;
   const moduleVideos = getVideosByModule(module.id);
   const moduleConcepts = getConceptsByModule(module.id);
@@ -119,9 +120,9 @@ export function ModulePage() {
             {section && (
               <>
                 <h2>{section.title}</h2>
-                {getDetailedLesson(module.id, section.id) && (
+                {isDeepLesson && (
                   <p className="lesson-mode-badge">
-                    📚 Deep lesson — read the Q&amp;A below like a tutoring session
+                    📚 Deep lesson — extended Q&amp;A tutoring content
                   </p>
                 )}
                 <MarkdownContent content={lessonContent} />

@@ -39,3 +39,22 @@ export function buildLesson(parts: {
   if (parts.tip) chunks.push(interviewTip(parts.tip));
   return chunks.join('\n');
 }
+
+/** Wrap short module sections in Q&A format when no dedicated deep lesson exists. */
+export function wrapSectionAsLesson(title: string, content: string): string {
+  return buildLesson({
+    intro:
+      'This lesson uses a **tutoring format**: you ask the question, the mentor explains in depth. Read each exchange carefully — this is your primary study material.',
+    dialogues: [
+      {
+        q: `I'm studying "${title}". Can you walk me through everything I need to know for interviews?`,
+        a: content,
+      },
+      {
+        q: 'How should I practice this so it sticks?',
+        a: `After reading, close the tab and **explain "${title}" out loud** in 2 minutes as if teaching a junior engineer. Then open the **Questions** tab in this module and answer 3 questions without looking. If you have a **Practical Exercise** below, do it — building beats reading.`,
+      },
+    ],
+    tip: 'Sections with a "Deep lesson" badge have extended Q&A content written specifically for interview depth. All sections use this tutoring format.',
+  });
+}
