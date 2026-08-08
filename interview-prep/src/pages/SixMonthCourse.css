@@ -204,6 +204,21 @@
   padding: 1.5rem;
 }
 
+.capstone-highlight {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, var(--bg-secondary) 100%);
+  border-color: rgba(239, 68, 68, 0.25);
+}
+
+.capstone-highlight .course-banner-link {
+  color: #ef4444;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.capstone-highlight .course-banner-link:hover {
+  text-decoration: underline;
+}
+
 .ai-highlight h2 {
   font-size: 1.25rem;
   margin-bottom: 0.5rem;

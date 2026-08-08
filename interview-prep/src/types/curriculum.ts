@@ -130,6 +130,37 @@ export interface SixMonthCourse {
   phases: CoursePhase[];
 }
 
+export interface CapstoneStep {
+  id: string;
+  week: number;
+  month: number;
+  title: string;
+  moduleIds: string[];
+  realWorldProblem: string;
+  objectives: string[];
+  implementationTasks: string[];
+  deliverables: string[];
+  conceptsApplied: string[];
+  acceptanceCriteria: string[];
+  architectureNote?: string;
+  starterCode?: string;
+  /** Paths in the pulsegrid/ repo for this week's implementation */
+  codePaths?: string[];
+}
+
+export interface CapstoneProject {
+  id: string;
+  name: string;
+  tagline: string;
+  description: string;
+  problemStatement: string;
+  targetUsers: string[];
+  finalArchitecture: string;
+  techStack: string[];
+  repoStructure: string;
+  steps: CapstoneStep[];
+}
+
 export const QUESTION_LEVEL_LABELS: Record<QuestionLevel, string> = {
   recall: 'Level A — Recall',
   understanding: 'Level B — Understanding',

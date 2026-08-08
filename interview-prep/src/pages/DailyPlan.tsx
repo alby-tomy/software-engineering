@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getDailyPlan } from '../data/practice';
 import { sixMonthDailyPlans } from '../data/six-month-daily-plan';
+import { getCapstoneStep } from '../data/capstone-project';
 import { sixMonthCourse } from '../data/six-month-course';
 import { useProgress } from '../hooks/useProgress';
 import './DailyPlan.css';
@@ -25,7 +26,26 @@ export function DailyPlan() {
   const isSixMonth = planType === 'six-month';
   const maxWeeks = isSixMonth ? 24 : 8;
   const plan = isSixMonth
-    ? sixMonthDailyPlans.find((w) => w.week === selectedWeek) ?? sixMonthDailyPlans[0]
+    ? (() => {
+        const base = sixMonthDailyPlans.find((w) => w.week === selectedWeek) ?? sixMonthDailyPlans[0];
+        const capstone = getCapstoneStep(selectedWeek);
+        const hasCapstoneTask = base.tasks.some((t) => t.link.startsWith('/capstone'));
+        if (capstone && !hasCapstoneTask) {
+          return {
+            ...base,
+            tasks: [
+              ...base.tasks,
+              {
+                type: 'project' as const,
+                label: `PulseGrid — ${capstone.title}`,
+                link: `/capstone#week-${capstone.week}`,
+                duration: '90 min',
+              },
+            ],
+          };
+        }
+        return base;
+      })()
     : getDailyPlan(selectedWeek);
 
   function toggleTask(index: number) {
