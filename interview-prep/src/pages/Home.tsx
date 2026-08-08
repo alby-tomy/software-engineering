@@ -4,6 +4,7 @@ import { allModules } from '../data/modules';
 import { learningPaths } from '../data/learning-paths';
 import { videoLessons } from '../data/concept-videos';
 import { detailedConcepts } from '../data/detailed-concepts';
+import { getDetailedLessonCount } from '../data/detailed-lessons';
 import { useProgress } from '../hooks/useProgress';
 import './Home.css';
 
@@ -19,7 +20,7 @@ export function Home() {
         <h1>Software Engineering Interview Mastery</h1>
         <p className="hero-subtitle">
           Complete preparation for 3+ years experience and senior-level interviews.
-          Theory, practice, and engineering reasoning — not memorization.
+          Every lesson uses AI-style Q&amp;A tutoring — ask doubts, get detailed mentor answers.
         </p>
         <div className="hero-stats">
           <div className="stat">
@@ -37,6 +38,10 @@ export function Home() {
           <div className="stat">
             <span className="stat-value">{videoLessons.length}</span>
             <span className="stat-label">Videos</span>
+          </div>
+          <div className="stat">
+            <span className="stat-value">{getDetailedLessonCount()}</span>
+            <span className="stat-label">Deep Lessons</span>
           </div>
           <div className="stat">
             <span className="stat-value">{progress}%</span>
