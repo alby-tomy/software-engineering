@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { capstoneProject } from '../data/capstone-project';
+import { getCapstoneTextbookLesson } from '../data/detailed-lessons/textbook-pulsegrid';
 import { MarkdownContent } from '../components/MarkdownContent';
 import { useCapstoneProgress } from '../hooks/useCapstoneProgress';
 import './CapstoneProject.css';
@@ -10,6 +11,7 @@ export function CapstoneProject() {
   const { isStepComplete, toggleStep, getProgress } = useCapstoneProgress();
   const step = capstoneProject.steps.find((s) => s.week === selectedWeek) ?? capstoneProject.steps[0];
   const progress = getProgress(capstoneProject.steps.length);
+  const textbookChapter = getCapstoneTextbookLesson(step.id);
 
   return (
     <div className="capstone-page">
@@ -93,6 +95,18 @@ export function CapstoneProject() {
             <h4>🌍 Real-World Problem</h4>
             <p>{step.realWorldProblem}</p>
           </div>
+
+          {textbookChapter && (
+            <div className="step-block textbook-chapter-block">
+              <h4>📖 Textbook Chapter — Read Before You Code</h4>
+              <p className="textbook-chapter-intro">
+                Study this chapter to understand <em>why</em> each concept exists and how it maps to the code you will write.
+              </p>
+              <div className="textbook-chapter-content">
+                <MarkdownContent content={textbookChapter} />
+              </div>
+            </div>
+          )}
 
           <div className="step-block">
             <h4>🎯 Objectives</h4>
