@@ -1,13 +1,22 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { capstoneProject } from '../data/capstone-project';
+import { capstoneQuickStartGuide } from '../data/capstone-quickstart';
 import { getCapstoneTextbookLesson } from '../data/detailed-lessons/textbook-pulsegrid';
 import { getCapstoneFullLesson } from '../data/capstone-embedded-walkthrough';
 import { MarkdownContent } from '../components/MarkdownContent';
 import { useCapstoneProgress } from '../hooks/useCapstoneProgress';
 import './CapstoneProject.css';
 
+function parseWeekFromHash(hash: string): number | null {
+  const match = hash.match(/^#week-(\d+)$/);
+  if (!match) return null;
+  const week = Number(match[1]);
+  return week >= 1 && week <= 24 ? week : null;
+}
+
 export function CapstoneProject() {
+  const location = useLocation();
   const [selectedWeek, setSelectedWeek] = useState(1);
   const { isStepComplete, toggleStep, getProgress } = useCapstoneProgress();
   const step = capstoneProject.steps.find((s) => s.week === selectedWeek) ?? capstoneProject.steps[0];
@@ -17,6 +26,21 @@ export function CapstoneProject() {
     starterCode: step.starterCode,
   });
 
+  useEffect(() => {
+    const week = parseWeekFromHash(location.hash);
+    if (week !== null) {
+      setSelectedWeek(week);
+      requestAnimationFrame(() => {
+        document.getElementById(`week-${week}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
+  }, [location.hash]);
+
+  const selectWeek = (week: number) => {
+    setSelectedWeek(week);
+    window.history.replaceState(null, '', `#week-${week}`);
+  };
+
   return (
     <div className="capstone-page">
       <header className="capstone-hero">
@@ -25,9 +49,8 @@ export function CapstoneProject() {
         <p className="capstone-tagline">{capstoneProject.tagline}</p>
         <p className="capstone-desc">{capstoneProject.description}</p>
         <div className="capstone-repo-link">
-          <strong>Runnable codebase:</strong>{' '}
-          <code>pulsegrid/</code> in this repository — clone, run <code>docker compose up</code>, then{' '}
-          <code>pytest</code> to verify each week&apos;s implementation.
+          <strong>Runnable codebase:</strong> All code runs from the <code>pulsegrid/</code> directory in this repo.
+          See the Quick Start guide below for full setup commands.
         </div>
         <div className="capstone-meta">
           <span>📅 24 weekly steps</span>
@@ -38,6 +61,11 @@ export function CapstoneProject() {
           <div className="capstone-progress-fill" style={{ width: `${progress}%` }} />
         </div>
       </header>
+
+      <section className="capstone-section quickstart-section">
+        <h2>Quick Start — Run It Yourself</h2>
+        <MarkdownContent content={capstoneQuickStartGuide} />
+      </section>
 
       <section className="capstone-section">
         <h2>Real-World Problem</h2>
@@ -75,7 +103,7 @@ export function CapstoneProject() {
             <button
               key={s.week}
               className={`week-chip ${selectedWeek === s.week ? 'active' : ''} ${isStepComplete(s.id) ? 'done' : ''}`}
-              onClick={() => setSelectedWeek(s.week)}
+              onClick={() => selectWeek(s.week)}
             >
               {isStepComplete(s.id) ? '✓ ' : ''}W{s.week}
             </button>
@@ -126,6 +154,20 @@ export function CapstoneProject() {
             </ol>
           </div>
 
+          {step.codePaths && step.codePaths.length > 0 && (
+            <details className="step-block source-files-details">
+              <summary>📁 Source files in repository (optional reference)</summary>
+              <p className="code-paths-intro">
+                The full lesson above includes all code inline. These paths map to the runnable implementation in the repo:
+              </p>
+              <ul className="code-paths-list">
+                {step.codePaths.map((path) => (
+                  <li key={path}><code>{path}</code></li>
+                ))}
+              </ul>
+            </details>
+          )}
+
           <div className="step-block">
             <h4>📦 Deliverables</h4>
             <ul>
@@ -158,10 +200,10 @@ export function CapstoneProject() {
 
           <div className="step-nav">
             {step.week > 1 && (
-              <button onClick={() => setSelectedWeek(step.week - 1)}>← Week {step.week - 1}</button>
+              <button onClick={() => selectWeek(step.week - 1)}>← Week {step.week - 1}</button>
             )}
             {step.week < 24 && (
-              <button onClick={() => setSelectedWeek(step.week + 1)}>Week {step.week + 1} →</button>
+              <button onClick={() => selectWeek(step.week + 1)}>Week {step.week + 1} →</button>
             )}
           </div>
         </article>

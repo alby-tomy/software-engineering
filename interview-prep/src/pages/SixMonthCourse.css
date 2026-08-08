@@ -186,6 +186,19 @@
   border-color: var(--accent);
 }
 
+.week-capstone-link {
+  display: block;
+  font-size: 0.85rem;
+  color: #ef4444;
+  text-decoration: none;
+  margin-bottom: 0.35rem;
+  font-weight: 500;
+}
+
+.week-capstone-link:hover {
+  text-decoration: underline;
+}
+
 .week-plan-link {
   font-size: 0.85rem;
   color: var(--accent);

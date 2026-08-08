@@ -350,3 +350,24 @@
   background: var(--bg-primary);
   border-radius: 0 6px 6px 0;
 }
+
+.quickstart-section {
+  border-left: 3px solid #22c55e;
+}
+
+.source-files-details {
+  background: var(--bg-secondary);
+  border-left: 3px solid #64748b;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+}
+
+.source-files-details summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.source-files-details[open] summary {
+  margin-bottom: 0.75rem;
+}

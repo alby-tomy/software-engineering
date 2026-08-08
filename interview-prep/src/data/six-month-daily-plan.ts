@@ -1,3 +1,5 @@
+import { capstoneSteps } from './capstone-steps';
+
 export interface DailyTask {
   type: 'learn' | 'practice' | 'quiz' | 'review' | 'project';
   label: string;
@@ -233,10 +235,29 @@ export const sixMonthDailyPlans: WeeklyPlan[] = [
   },
 ];
 
+function withCapstoneTask(plan: WeeklyPlan): WeeklyPlan {
+  const capstoneStep = capstoneSteps.find((s) => s.week === plan.week);
+  if (!capstoneStep) return plan;
+  if (plan.tasks.some((t) => t.link.startsWith('/capstone'))) return plan;
+  return {
+    ...plan,
+    tasks: [
+      ...plan.tasks,
+      {
+        type: 'project',
+        label: `🚨 PulseGrid Week ${plan.week}: ${capstoneStep.title}`,
+        link: `/capstone#week-${plan.week}`,
+        duration: '90 min',
+      },
+    ],
+  };
+}
+
 export function getSixMonthPlan(weekNumber: number): WeeklyPlan {
-  return sixMonthDailyPlans.find((p) => p.week === weekNumber) ?? sixMonthDailyPlans[0];
+  const plan = sixMonthDailyPlans.find((p) => p.week === weekNumber) ?? sixMonthDailyPlans[0];
+  return withCapstoneTask(plan);
 }
 
 export function getAllSixMonthWeeks(): WeeklyPlan[] {
-  return sixMonthDailyPlans;
+  return sixMonthDailyPlans.map(withCapstoneTask);
 }
