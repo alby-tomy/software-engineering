@@ -1,6 +1,6 @@
 [project]
 name = "pulsegrid"
-version = "0.1.0"
+version = "0.2.0"
 description = "AI-powered incident response platform — learn-by-building capstone"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -17,6 +17,8 @@ dependencies = [
     "python-jose[cryptography]>=3.3.0",
     "bcrypt>=4.2.0",
     "structlog>=24.4.0",
+    "strawberry-graphql[fastapi]>=0.252.0",
+    "grpcio>=1.68.0",
 ]
 
 [project.optional-dependencies]
@@ -28,10 +30,12 @@ dev = [
     "ruff>=0.8.0",
     "httpx>=0.28.0",
 ]
+kafka = ["aiokafka>=0.12.0"]
 
 [project.scripts]
 pulsegrid-api = "pulsegrid.api.main:run"
 pulsegrid-worker = "pulsegrid.worker.runner:run"
+pulsegrid-grpc = "pulsegrid.services.notification.grpc_server:run_grpc_server"
 
 [build-system]
 requires = ["hatchling"]
@@ -52,7 +56,7 @@ warn_return_any = true
 warn_unused_ignores = true
 
 [[tool.mypy.overrides]]
-module = ["jose.*", "bcrypt.*"]
+module = ["jose.*", "bcrypt.*", "strawberry.*", "grpc.*"]
 ignore_missing_imports = true
 
 [tool.ruff]

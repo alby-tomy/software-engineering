@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package pulsegrid.notification;
+
+service NotificationService {
+  rpc SendPage (PageRequest) returns (PageResponse);
+}
+
+message PageRequest {
+  string on_call_id = 1;
+  string incident_id = 2;
+  string title = 3;
+  string severity = 4;
+}
+
+message PageResponse {
+  bool success = 1;
+  string message = 2;
+}

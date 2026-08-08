@@ -410,6 +410,12 @@ CREATE INDEX idx_incidents_severity_created ON incidents(severity, created_at DE
       'gRPC notification delivers page request in < 20ms',
       'Idempotent webhook replay does not create duplicate incidents',
     ],
+    codePaths: [
+      'pulsegrid/pulsegrid/api/routers/v1.py',
+      'pulsegrid/pulsegrid/api/graphql/schema.py',
+      'pulsegrid/pulsegrid/services/notification/grpc_server.py',
+      'pulsegrid/pulsegrid/core/idempotency.py',
+    ],
   },
   {
     id: 'step-11-react-dashboard',
@@ -443,6 +449,12 @@ CREATE INDEX idx_incidents_severity_created ON incidents(severity, created_at DE
       'Acknowledge updates UI within 2s without full page reload',
       'Filter by severity and service works client-side + server-side',
     ],
+    codePaths: [
+      'pulsegrid/dashboard/src/App.tsx',
+      'pulsegrid/dashboard/src/components/IncidentList.tsx',
+      'pulsegrid/dashboard/src/components/IncidentCard.tsx',
+      'pulsegrid/pulsegrid/api/routers/ws.py',
+    ],
   },
   {
     id: 'step-12-nextjs-fullstack',
@@ -475,6 +487,12 @@ CREATE INDEX idx_incidents_severity_created ON incidents(severity, created_at DE
       'Status page updates within 60s of incident resolution',
       'Unauthenticated users cannot access /incidents',
     ],
+    codePaths: [
+      'pulsegrid/dashboard-next/app/incidents/page.tsx',
+      'pulsegrid/dashboard-next/app/status/[team]/page.tsx',
+      'pulsegrid/dashboard-next/middleware.ts',
+      'pulsegrid/pulsegrid/api/routers/status.py',
+    ],
   },
   {
     id: 'step-13-git-workflow',
@@ -506,6 +524,11 @@ CREATE INDEX idx_incidents_severity_created ON incidents(severity, created_at DE
       'Direct push to main is blocked',
       'PR template includes test plan and rollback plan',
       'Hotfix branch merged to main with release tag',
+    ],
+    codePaths: [
+      'pulsegrid/.github/PULL_REQUEST_TEMPLATE.md',
+      'pulsegrid/.github/CODEOWNERS',
+      'pulsegrid/docs/contributing.md',
     ],
   },
   {
@@ -540,6 +563,13 @@ CREATE INDEX idx_incidents_severity_created ON incidents(severity, created_at DE
       'CI fails on lint errors or test failures',
       'Staging deployment completes in < 5 minutes',
     ],
+    codePaths: [
+      'pulsegrid/infra/docker/Dockerfile.api',
+      'pulsegrid/infra/docker/Dockerfile.worker',
+      'pulsegrid/docker-compose.yml',
+      'pulsegrid/.github/workflows/ci.yml',
+      '.github/workflows/pulsegrid-ci.yml',
+    ],
   },
   {
     id: 'step-15-networking-cloud',
@@ -572,6 +602,12 @@ CREATE INDEX idx_incidents_severity_created ON incidents(severity, created_at DE
       'HTTPS enforced — HTTP redirects to HTTPS',
       'DB not publicly accessible',
       'ALB health checks route only to healthy instances',
+    ],
+    codePaths: [
+      'pulsegrid/infra/terraform/main.tf',
+      'pulsegrid/infra/terraform/modules/vpc/main.tf',
+      'pulsegrid/infra/terraform/modules/rds/main.tf',
+      'pulsegrid/docs/runbooks/networking-debug.md',
     ],
   },
   {
@@ -606,6 +642,13 @@ CREATE INDEX idx_incidents_severity_created ON incidents(severity, created_at DE
       'E2E test passes in CI',
       'No high/critical OWASP findings unresolved',
     ],
+    codePaths: [
+      'pulsegrid/infra/k8s/api-deployment.yaml',
+      'pulsegrid/infra/k8s/worker-deployment.yaml',
+      'pulsegrid/pulsegrid/api/middleware/rate_limit.py',
+      'pulsegrid/pulsegrid/api/middleware/security.py',
+      'pulsegrid/tests/integration/test_weeks_10_24.py',
+    ],
   },
   {
     id: 'step-17-system-design-scale',
@@ -639,6 +682,12 @@ CREATE INDEX idx_incidents_severity_created ON incidents(severity, created_at DE
       'p95 ingestion latency < 200ms under load',
       'Circuit breaker opens when notification service is down',
     ],
+    codePaths: [
+      'pulsegrid/docs/design/scale-10k-apm.md',
+      'pulsegrid/pulsegrid/core/circuit_breaker.py',
+      'pulsegrid/pulsegrid/core/load_shedding.py',
+      'pulsegrid/scripts/load_test.py',
+    ],
   },
   {
     id: 'step-18-incident-timeline',
@@ -670,6 +719,12 @@ CREATE INDEX idx_incidents_severity_created ON incidents(severity, created_at DE
       'Timeline shows exact timestamps for detect → ack → resolve',
       'Status page reflects current incident state within 60s',
       'Postmortem draft generated with MTTR and timeline',
+    ],
+    codePaths: [
+      'pulsegrid/pulsegrid/core/events.py',
+      'pulsegrid/pulsegrid/api/routers/timeline.py',
+      'pulsegrid/pulsegrid/api/routers/postmortem.py',
+      'pulsegrid/pulsegrid/services/notification/service.py',
     ],
   },
   {
@@ -704,6 +759,11 @@ CREATE INDEX idx_incidents_severity_created ON incidents(severity, created_at DE
       'Search index updated within 5s of incident creation',
       'Notification failure does not block incident creation',
     ],
+    codePaths: [
+      'pulsegrid/pulsegrid/core/outbox.py',
+      'pulsegrid/pulsegrid/services/event_bus.py',
+      'pulsegrid/docker-compose.yml',
+    ],
   },
   {
     id: 'step-20-performance',
@@ -737,6 +797,11 @@ CREATE INDEX idx_incidents_severity_created ON incidents(severity, created_at DE
       'No endpoint does full table scan under load',
       'Grafana SLO dashboard shows green during load test',
     ],
+    codePaths: [
+      'pulsegrid/scripts/load_test.py',
+      'pulsegrid/pulsegrid/db/session.py',
+      'pulsegrid/docs/design/scale-10k-apm.md',
+    ],
   },
   {
     id: 'step-21-generative-ai',
@@ -769,6 +834,10 @@ CREATE INDEX idx_incidents_severity_created ON incidents(severity, created_at DE
       'Summary generated within 10s for typical incident',
       'Summary includes: what happened, affected services, timeline, suggested actions',
       'Eval score ≥ 0.8 on faithfulness to source data',
+    ],
+    codePaths: [
+      'pulsegrid/pulsegrid/services/ai/summarizer.py',
+      'pulsegrid/pulsegrid/api/routers/ai.py',
     ],
   },
   {
@@ -804,6 +873,11 @@ CREATE INDEX idx_incidents_severity_created ON incidents(severity, created_at DE
       'Runbook suggestions appear within 3s of incident creation',
       'Search returns relevant past incidents by natural language query',
     ],
+    codePaths: [
+      'pulsegrid/pulsegrid/services/ai/rag.py',
+      'pulsegrid/docs/runbooks/',
+      'pulsegrid/scripts/eval_rag.py',
+    ],
   },
   {
     id: 'step-23-agentic-ai',
@@ -838,6 +912,10 @@ CREATE INDEX idx_incidents_severity_created ON incidents(severity, created_at DE
       'Agent never executes destructive action without approval',
       'Full trace logged for audit',
     ],
+    codePaths: [
+      'pulsegrid/pulsegrid/services/ai/agent.py',
+      'pulsegrid/pulsegrid/api/routers/ai.py',
+    ],
   },
   {
     id: 'step-24-production-launch',
@@ -871,6 +949,12 @@ CREATE INDEX idx_incidents_severity_created ON incidents(severity, created_at DE
       'Full end-to-end flow works in production environment',
       'AI features have monitoring and fallback',
       'Can present PulseGrid in 5-minute interview format covering architecture, trade-offs, and lessons learned',
+    ],
+    codePaths: [
+      'pulsegrid/docs/architecture.md',
+      'pulsegrid/docs/demo-script.md',
+      'pulsegrid/scripts/eval_rag.py',
+      'pulsegrid/.github/workflows/ci.yml',
     ],
   },
 ];

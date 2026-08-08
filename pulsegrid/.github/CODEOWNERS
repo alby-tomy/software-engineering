@@ -1,0 +1,7 @@
+# PulseGrid code owners
+* @alby-tomy
+
+/pulsegrid/pulsegrid/api/ @alby-tomy
+/pulsegrid/pulsegrid/core/ @alby-tomy
+/pulsegrid/pulsegrid/services/ai/ @alby-tomy
+/pulsegrid/infra/ @alby-tomy
