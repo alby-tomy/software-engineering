@@ -16,6 +16,7 @@ import {
   mongodb,
   elasticsearch,
 } from './new-topics';
+import { generativeAi, ragEmbeddings, agenticAi } from './ai-curriculum';
 import {
   databases,
   go,
@@ -74,6 +75,9 @@ export const allModules: Module[] = [
   testing,
   performance,
   observability,
+  generativeAi,
+  ragEmbeddings,
+  agenticAi,
   aiEngineering,
   behavioral,
   seniorEngineering,

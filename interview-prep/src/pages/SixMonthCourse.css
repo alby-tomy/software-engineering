@@ -1,0 +1,259 @@
+.six-month-course h1 {
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.course-hero {
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--accent-bg) 100%);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.course-description {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.course-meta {
+  display: flex;
+  gap: 1.5rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+.course-outcome {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.course-cta {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.cta-primary,
+.cta-secondary {
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: all 0.15s;
+}
+
+.cta-primary {
+  background: var(--accent);
+  color: white;
+}
+
+.cta-primary:hover {
+  opacity: 0.9;
+}
+
+.cta-secondary {
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+}
+
+.cta-secondary:hover {
+  border-color: var(--accent);
+}
+
+.course-overview h2 {
+  font-size: 1.35rem;
+  margin-bottom: 0.5rem;
+}
+
+.overview-intro {
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.phase-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.phase-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.5rem;
+}
+
+.phase-header {
+  margin-bottom: 1rem;
+}
+
+.phase-month {
+  display: inline-block;
+  background: var(--accent-bg);
+  color: var(--accent);
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.phase-header h3 {
+  font-size: 1.15rem;
+  margin-bottom: 0.25rem;
+}
+
+.phase-theme {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.phase-description {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.phase-goals h4 {
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.phase-goals ul {
+  margin: 0 0 1.25rem 1.25rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.phase-weeks {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.week-card {
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.week-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.week-number {
+  font-size: 0.8rem;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.week-focus {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  width: 100%;
+}
+
+.week-modules {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.week-module-link {
+  font-size: 0.85rem;
+  padding: 0.35rem 0.75rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  text-decoration: none;
+  color: var(--text-primary);
+  transition: border-color 0.15s;
+}
+
+.week-module-link:hover {
+  border-color: var(--accent);
+}
+
+.week-plan-link {
+  font-size: 0.85rem;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.week-plan-link:hover {
+  text-decoration: underline;
+}
+
+.ai-highlight {
+  margin-top: 2rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.5rem;
+}
+
+.ai-highlight h2 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.ai-highlight > p {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 1.25rem;
+}
+
+.ai-modules-grid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.ai-module-card {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s;
+}
+
+.ai-module-card:hover {
+  border-color: var(--accent);
+}
+
+.ai-module-icon {
+  font-size: 1.5rem;
+}
+
+.ai-module-card p {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin: 0.25rem 0;
+  line-height: 1.5;
+}
+
+.ai-module-hours {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+@media (min-width: 768px) {
+  .ai-modules-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

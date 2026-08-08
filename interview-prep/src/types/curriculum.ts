@@ -111,6 +111,25 @@ export interface Stage {
   moduleIds: string[];
 }
 
+export interface CoursePhase {
+  month: number;
+  title: string;
+  theme: string;
+  description: string;
+  goals: string[];
+  weeks: { week: number; title: string; focus: string; moduleIds: string[] }[];
+}
+
+export interface SixMonthCourse {
+  id: string;
+  title: string;
+  description: string;
+  totalWeeks: number;
+  hoursPerWeek: string;
+  targetOutcome: string;
+  phases: CoursePhase[];
+}
+
 export const QUESTION_LEVEL_LABELS: Record<QuestionLevel, string> = {
   recall: 'Level A — Recall',
   understanding: 'Level B — Understanding',

@@ -5,6 +5,7 @@ import { learningPaths } from '../data/learning-paths';
 import { videoLessons } from '../data/concept-videos';
 import { detailedConcepts } from '../data/detailed-concepts';
 import { getDetailedLessonCount } from '../data/detailed-lessons';
+import { sixMonthCourse } from '../data/six-month-course';
 import { useProgress } from '../hooks/useProgress';
 import './Home.css';
 
@@ -22,6 +23,14 @@ export function Home() {
           Complete preparation for 3+ years experience and senior-level interviews.
           Every lesson uses AI-style Q&amp;A tutoring — ask doubts, get detailed mentor answers.
         </p>
+        <div className="hero-cta">
+          <Link to="/course" className="hero-cta-primary">
+            🎓 Start 6-Month Course
+          </Link>
+          <Link to="/daily-plan" className="hero-cta-secondary">
+            📅 Today's Study Plan
+          </Link>
+        </div>
         <div className="hero-stats">
           <div className="stat">
             <span className="stat-value">{allModules.length}</span>
@@ -49,6 +58,24 @@ export function Home() {
           </div>
         </div>
       </header>
+
+      <section className="home-section course-banner">
+        <div className="course-banner-content">
+          <h2>🎓 {sixMonthCourse.title}</h2>
+          <p>
+            {sixMonthCourse.totalWeeks} weeks from CS fundamentals to generative AI, RAG, and agentic systems.
+            Includes deep Q&amp;A lessons, curated videos, daily tasks, and interview prep.
+          </p>
+          <div className="course-banner-meta">
+            <span>📅 {sixMonthCourse.totalWeeks} weeks</span>
+            <span>⏱️ {sixMonthCourse.hoursPerWeek}</span>
+            <span>✨ Generative &amp; Agentic AI in Month 6</span>
+          </div>
+          <Link to="/course" className="course-banner-link">
+            View full course roadmap →
+          </Link>
+        </div>
+      </section>
 
       <section className="home-section">
         <h2>🗺️ Choose Your Learning Path</h2>
@@ -94,7 +121,7 @@ export function Home() {
       <section className="home-section">
         <h2>📚 Curriculum Stages</h2>
         <p className="section-desc">
-          Progress through 10 stages from CS fundamentals to staff-level engineering thinking.
+          Progress through {stages.length} stages from CS fundamentals to generative AI and staff-level engineering.
         </p>
         <div className="stage-list">
           {stages.map((stage) => (
