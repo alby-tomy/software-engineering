@@ -3817,4 +3817,124 @@ LB → N API pods
       'API evolution: versioning, backward compatibility, deprecation timeline',
     ],
   }),
+
+  'security:jwt-deep': buildTextbookLesson({
+    chapter: 'JWT & OAuth2 Deep Dive',
+    overview:
+      'JSON Web Tokens and OAuth2 power most modern authentication. This chapter explains token structure, flows, security trade-offs, and production patterns for access and refresh tokens.',
+    objectives: [
+      'Decode JWT structure and choose signing algorithms (HS256 vs RS256)',
+      'Design secure access and refresh token lifecycles',
+      'Compare OAuth2 flows for web, mobile, and service-to-service',
+      'Implement token revocation and rotation strategies',
+    ],
+    definitions: [
+      { term: 'JWT', definition: 'JSON Web Token — compact, signed claims (header.payload.signature) used to transmit identity and authorization between parties.' },
+      { term: 'OAuth2', definition: 'Authorization framework allowing third-party apps limited access to user resources without sharing passwords.' },
+      { term: 'PKCE', definition: 'Proof Key for Code Exchange — prevents authorization code interception in public clients (SPAs, mobile).' },
+    ],
+    sections: [
+      {
+        title: 'JWT Structure and Verification',
+        content: `A JWT has three Base64URL-encoded parts separated by dots: **Header.Payload.Signature**.
+
+The **header** specifies algorithm (\`alg\`) and type (\`typ\`). The **payload** contains claims: \`sub\` (subject/user ID), \`exp\` (expiry), \`iat\` (issued at), custom roles. The **signature** verifies integrity — server signs with secret (HS256) or private key (RS256); verifiers use shared secret or public key.
+
+**Never trust the payload without verifying the signature.** Client-side JWT decoding for display is fine; authorization decisions must happen server-side after cryptographic verification.`,
+      },
+      {
+        title: 'Access vs Refresh Tokens',
+        content: `**Access tokens** are short-lived (5–15 minutes), sent on every API request (Authorization header or httpOnly cookie). Compromise window is small.
+
+**Refresh tokens** are long-lived (days/weeks), stored in **httpOnly, Secure, SameSite** cookies — not accessible to JavaScript (XSS protection). Used only to obtain new access tokens at a dedicated \`/token/refresh\` endpoint.
+
+**Rotation:** Issue a new refresh token on each refresh; invalidate the old one. Detects token theft — if attacker and legitimate user both refresh, one fails and you revoke the family.`,
+      },
+      {
+        title: 'OAuth2 Flows',
+        content: `**Authorization Code (+ PKCE):** User redirects to identity provider, logs in, returns code to your callback. Server exchanges code for tokens. **Standard for web and mobile.**
+
+**Client Credentials:** Service-to-service — no user involved. Client ID + secret → access token. Use for backend jobs, microservice auth.
+
+**Implicit (deprecated):** Token returned in URL fragment — avoid for new apps.
+
+**PKCE** adds \`code_verifier\` / \`code_challenge\` so intercepted authorization codes cannot be exchanged without the original client secret.`,
+      },
+    ],
+    example: {
+      title: 'FastAPI JWT verification',
+      language: 'python',
+      code: `from jose import jwt, JWTError
+
+def verify_token(token: str) -> dict:
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+        return payload
+    except JWTError:
+        raise HTTPException(401, "Invalid token")`,
+      explanation: 'Always specify allowed algorithms explicitly — prevents "alg: none" attacks. Use RS256 when multiple services verify tokens with a public key.',
+    },
+    pitfalls: [
+      'Storing JWT in localStorage — any XSS steals the token',
+      'Long-lived access tokens without refresh rotation',
+      'Not validating exp, iss, and aud claims',
+    ],
+    summary: [
+      'JWT = signed claims; verify signature server-side on every request',
+      'Short access tokens + httpOnly refresh cookies + rotation',
+      'OAuth2 Authorization Code + PKCE for user-facing apps',
+      'Plan revocation: short expiry, refresh rotation, or Redis blocklist for JTIs',
+    ],
+  }),
+
+  'security:cors-csrf': buildTextbookLesson({
+    chapter: 'CORS & CSRF',
+    overview:
+      'Browsers enforce the Same-Origin Policy. CORS and CSRF protections are essential for web APIs. This chapter explains how cross-origin requests work and how to prevent cross-site request forgery.',
+    objectives: [
+      'Explain CORS preflight and configure safe Access-Control headers',
+      'Prevent CSRF with SameSite cookies, tokens, and Origin checks',
+      'Distinguish CORS errors from authentication failures',
+      'Design APIs safe for browser clients and SPAs',
+    ],
+    definitions: [
+      { term: 'CORS', definition: 'Cross-Origin Resource Sharing — browser mechanism allowing servers to permit requests from different origins via response headers.' },
+      { term: 'CSRF', definition: 'Cross-Site Request Forgery — attack where a malicious site triggers authenticated actions in the user\'s browser without consent.' },
+      { term: 'Preflight', definition: 'OPTIONS request browsers send before "non-simple" cross-origin requests to check server permission.' },
+    ],
+    sections: [
+      {
+        title: 'How CORS Works',
+        content: `Browsers block JavaScript from reading responses from a **different origin** (scheme + host + port) unless the server explicitly allows it.
+
+Server responds with:
+- \`Access-Control-Allow-Origin: https://app.example.com\` (never \`*\` when credentials are sent)
+- \`Access-Control-Allow-Credentials: true\` for cookies
+- \`Access-Control-Allow-Methods\` and \`Access-Control-Allow-Headers\` for preflight
+
+**Simple requests** (GET, POST with simple content-types) skip preflight. **Preflight** OPTIONS runs first for PUT, DELETE, custom headers, or JSON content-type.`,
+      },
+      {
+        title: 'CSRF Attack and Defense',
+        content: `If your API uses **cookie-based sessions**, a malicious page can submit a form to \`https://bank.com/transfer\` — the browser automatically attaches cookies. User is authenticated; bank processes the transfer.
+
+**Defenses:**
+1. **SameSite=Strict/Lax** cookies — not sent on cross-site requests
+2. **CSRF tokens** — server embeds token in page; attacker cannot read it (same-origin)
+3. **Check Origin/Referer** headers on state-changing requests
+4. **Use Authorization header** (Bearer token) instead of cookies — not sent automatically (but then XSS is your main threat)`,
+      },
+    ],
+    pitfalls: [
+      'Access-Control-Allow-Origin: * with credentials — browsers reject this',
+      'Only checking CORS on API but forgetting CSRF for cookie auth',
+      'Disabling CORS in production to "fix" frontend errors instead of whitelisting origins',
+    ],
+    summary: [
+      'CORS is a browser security feature — configure explicit allowed origins',
+      'Preflight OPTIONS must return correct headers for non-simple requests',
+      'CSRF targets cookie-based auth — use SameSite, tokens, or Bearer headers',
+      'CORS errors appear in browser console; fix server headers, not client hacks',
+    ],
+  }),
 };

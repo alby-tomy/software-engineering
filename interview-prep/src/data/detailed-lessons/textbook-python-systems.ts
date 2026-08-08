@@ -1581,7 +1581,7 @@ Buffer& operator=(Buffer other) { // pass by value — move or copy
 
 Provides strong exception guarantee when copy ctor can throw.
 
-**Three-way comparison** (C++20 \`<=>`) can simplify equality if ordering defined.`,
+**Three-way comparison** (C++20 <=> operator) can simplify equality if ordering defined.`,
       },
       {
         title: 'Move in APIs and Performance',

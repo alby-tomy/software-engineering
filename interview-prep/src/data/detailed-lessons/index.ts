@@ -7,6 +7,9 @@ import { dsaLessons } from './dsa';
 import { coreLessons } from './core-modules';
 import { aiCurriculumLessons } from './ai-curriculum';
 import { devopsLessons } from './devops';
+import { textbookPythonSystemsLessons } from './textbook-python-systems';
+import { textbookDataApiLessons } from './textbook-data-api';
+import { textbookFrontendProductionLessons } from './textbook-frontend-production';
 
 const allLessons: Record<string, string> = {
   ...systemDesignLessons,
@@ -18,6 +21,9 @@ const allLessons: Record<string, string> = {
   ...coreLessons,
   ...aiCurriculumLessons,
   ...devopsLessons,
+  ...textbookPythonSystemsLessons,
+  ...textbookDataApiLessons,
+  ...textbookFrontendProductionLessons,
 };
 
 export function getDetailedLesson(moduleId: string, sectionId: string): string | undefined {
