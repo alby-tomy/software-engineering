@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getModule } from '../data/modules';
+import { getModuleQuiz } from '../data/practice';
 import { useProgress } from '../hooks/useProgress';
 import { MarkdownContent } from '../components/MarkdownContent';
 import { CodeBlock } from '../components/CodeBlock';
 import { QuestionCard } from '../components/QuestionCard';
 import './ModulePage.css';
 
-type Tab = 'learn' | 'questions' | 'scenarios' | 'resources';
+type Tab = 'learn' | 'questions' | 'scenarios' | 'resources' | 'quiz';
 
 export function ModulePage() {
   const { moduleId } = useParams<{ moduleId: string }>();
@@ -27,6 +28,7 @@ export function ModulePage() {
 
   const progress = getModuleProgress(module.id, module.sections.length);
   const section = module.sections[activeSection];
+  const hasQuiz = getModuleQuiz(module.id).length > 0;
 
   return (
     <div className="module-page">
@@ -72,6 +74,11 @@ export function ModulePage() {
             {tab === 'resources' && `📚 Resources (${module.resources.length})`}
           </button>
         ))}
+        {hasQuiz && (
+          <Link to={`/quiz/${module.id}`} className="tab-btn quiz-tab">
+            🧪 Take Quiz
+          </Link>
+        )}
       </div>
 
       {activeTab === 'learn' && (
@@ -126,7 +133,7 @@ export function ModulePage() {
       {activeTab === 'questions' && (
         <div className="questions-list">
           {module.questions.map((q, i) => (
-            <QuestionCard key={q.id} question={q} index={i} />
+            <QuestionCard key={q.id} question={q} index={i} moduleId={module.id} />
           ))}
         </div>
       )}

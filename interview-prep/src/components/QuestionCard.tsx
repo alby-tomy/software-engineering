@@ -1,15 +1,19 @@
 import { useState } from 'react';
 import type { Question } from '../types/curriculum';
 import { QUESTION_LEVEL_LABELS, QUESTION_LEVEL_COLORS } from '../types/curriculum';
+import { useProgress } from '../hooks/useProgress';
 import './QuestionCard.css';
 
 interface QuestionCardProps {
   question: Question;
   index: number;
+  moduleId?: string;
 }
 
-export function QuestionCard({ question, index }: QuestionCardProps) {
+export function QuestionCard({ question, index, moduleId }: QuestionCardProps) {
   const [revealed, setRevealed] = useState(false);
+  const bookmarkId = moduleId ? `${moduleId}-${question.id}` : question.id;
+  const { isBookmarked, toggleBookmark } = useProgress();
 
   return (
     <div className="question-card">
@@ -21,6 +25,13 @@ export function QuestionCard({ question, index }: QuestionCardProps) {
         >
           {QUESTION_LEVEL_LABELS[question.level]}
         </span>
+        <button
+          className={`bookmark-btn ${isBookmarked(bookmarkId) ? 'bookmarked' : ''}`}
+          onClick={() => toggleBookmark(bookmarkId)}
+          title="Bookmark this question"
+        >
+          {isBookmarked(bookmarkId) ? '🔖' : '📑'}
+        </button>
       </div>
       <p className="question-text">{question.question}</p>
       {!revealed ? (

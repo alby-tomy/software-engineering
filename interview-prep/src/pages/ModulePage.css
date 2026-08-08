@@ -106,6 +106,15 @@
   font-weight: 600;
 }
 
+.quiz-tab {
+  margin-left: auto;
+  text-decoration: none;
+  background: var(--accent-bg);
+  border-radius: 8px 8px 0 0;
+  color: var(--accent) !important;
+  font-weight: 600;
+}
+
 .learn-layout {
   display: grid;
   grid-template-columns: 220px 1fr;

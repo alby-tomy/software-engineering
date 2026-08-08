@@ -26,6 +26,12 @@ export function Sidebar({ currentModuleId, onClose, isOpen }: SidebarProps) {
         <Link to="/" className="nav-item" onClick={onClose}>
           🏠 Home
         </Link>
+        <Link to="/dashboard" className="nav-item" onClick={onClose}>
+          📊 Dashboard
+        </Link>
+        <Link to="/daily-plan" className="nav-item" onClick={onClose}>
+          📅 Daily Plan
+        </Link>
         <Link to="/paths" className="nav-item" onClick={onClose}>
           🗺️ Learning Paths
         </Link>
@@ -34,6 +40,9 @@ export function Sidebar({ currentModuleId, onClose, isOpen }: SidebarProps) {
         </Link>
         <Link to="/mock-interview" className="nav-item" onClick={onClose}>
           🎤 Mock Interview
+        </Link>
+        <Link to="/system-design-practice" className="nav-item" onClick={onClose}>
+          🏗️ System Design
         </Link>
         <Link to="/search" className="nav-item" onClick={onClose}>
           🔍 Search

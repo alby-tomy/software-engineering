@@ -48,5 +48,9 @@ Open **http://localhost:4173**
 | System Design | `/module/system-design` |
 | Flashcards | `/flashcards` |
 | Mock Interview | `/mock-interview` |
+| Dashboard | `/dashboard` |
+| Daily Study Plan | `/daily-plan` |
+| System Design Practice | `/system-design-practice` |
+| Module Quiz | `/quiz/python` |
 | Learning Paths | `/paths` |
 | Search | `/search` |

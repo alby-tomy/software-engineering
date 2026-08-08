@@ -1,0 +1,164 @@
+.daily-plan h1 {
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.plan-intro {
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.week-selector {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.week-btn {
+  padding: 0.5rem 1rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.15s;
+}
+
+.week-btn:hover {
+  border-color: var(--accent);
+}
+
+.week-btn.active {
+  background: var(--accent-bg);
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.plan-header {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.plan-header h2 {
+  font-size: 1.1rem;
+}
+
+.plan-progress {
+  text-align: right;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.plan-progress-bar {
+  width: 120px;
+  height: 6px;
+  background: var(--bg-primary);
+  border-radius: 3px;
+  margin-top: 0.35rem;
+  overflow: hidden;
+}
+
+.plan-progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 3px;
+}
+
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.task-item {
+  display: flex;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  transition: all 0.15s;
+}
+
+.task-item.done {
+  opacity: 0.6;
+}
+
+.task-item.done .task-label {
+  text-decoration: line-through;
+}
+
+.task-check {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: var(--bg-primary);
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--accent);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.task-item.done .task-check {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+.task-content {
+  flex: 1;
+}
+
+.task-meta {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.35rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: capitalize;
+}
+
+.task-label {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.task-label:hover {
+  color: var(--accent);
+}
+
+.week-complete {
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  background: var(--accent-bg);
+  border: 1px solid var(--accent);
+  border-radius: 12px;
+  text-align: center;
+  font-size: 1rem;
+}
+
+.week-complete button {
+  margin-left: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
