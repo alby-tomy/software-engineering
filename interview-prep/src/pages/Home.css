@@ -278,7 +278,8 @@
 
   .path-grid,
   .how-to-grid,
-  .level-grid {
+  .level-grid,
+  .practice-grid {
     grid-template-columns: 1fr;
   }
 
