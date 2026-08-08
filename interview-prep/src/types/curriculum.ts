@@ -49,6 +49,34 @@ export interface Resource {
   type: 'article' | 'video' | 'book' | 'practice' | 'documentation';
 }
 
+export interface VideoLesson {
+  id: string;
+  title: string;
+  description: string;
+  youtubeId: string;
+  duration: string;
+  channel: string;
+  moduleId: string;
+  concept: string;
+  level: 'beginner' | 'intermediate' | 'advanced';
+  keyTakeaways: string[];
+  detailedExplanation: string;
+  watchOrder?: number;
+}
+
+export interface DetailedConcept {
+  id: string;
+  moduleId: string;
+  title: string;
+  summary: string;
+  content: string;
+  analogy?: string;
+  realWorldExample?: string;
+  commonMistakes?: string[];
+  interviewTips?: string[];
+  relatedVideoIds: string[];
+}
+
 export interface Module {
   id: string;
   title: string;

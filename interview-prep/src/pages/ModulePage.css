@@ -303,6 +303,79 @@
   padding: 2rem;
 }
 
+.module-videos h2 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.videos-intro {
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.module-concepts-section {
+  margin-bottom: 2.5rem;
+}
+
+.module-concept-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.module-concept-card h3 {
+  font-size: 1.15rem;
+  margin-bottom: 0.5rem;
+}
+
+.concept-summary {
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.concept-callout {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+  line-height: 1.6;
+  font-size: 0.9rem;
+}
+
+.concept-callout.analogy {
+  background: #8b5cf622;
+  border-left: 3px solid #8b5cf6;
+}
+
+.concept-callout.real-world {
+  background: #22c55e22;
+  border-left: 3px solid #22c55e;
+}
+
+.concept-callout.tips {
+  background: #f59e0b22;
+  border-left: 3px solid #f59e0b;
+}
+
+.concept-callout ul {
+  margin: 0.5rem 0 0 1.25rem;
+}
+
+.all-videos-link {
+  display: inline-block;
+  margin-top: 1rem;
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.all-videos-link:hover {
+  text-decoration: underline;
+}
+
 .not-found {
   text-align: center;
   padding: 3rem;
