@@ -120,37 +120,42 @@ export const sixMonthDailyPlans: WeeklyPlan[] = [
     ],
   },
   {
-    week: 13, month: 4, title: 'Week 13: Networking & Linux',
+    week: 13, month: 4, title: 'Week 13: Version Control & Git Workflows',
+    tasks: [
+      { type: 'learn', label: 'Git — Fundamentals & how version control works', link: '/module/git', duration: '60 min' },
+      { type: 'learn', label: 'Git — Collaboration, PRs & code review', link: '/module/git', duration: '45 min' },
+      { type: 'learn', label: 'Git — Branching strategies (trunk-based vs Gitflow)', link: '/module/git', duration: '45 min' },
+      { type: 'practice', label: 'Watch Git concept videos', link: '/videos', duration: '30 min' },
+      { type: 'quiz', label: 'Git module quiz', link: '/quiz/git', duration: '15 min' },
+    ],
+  },
+  {
+    week: 14, month: 4, title: 'Week 14: Docker & CI/CD DevOps',
+    tasks: [
+      { type: 'learn', label: 'DevOps — Culture, CALMS & DORA metrics', link: '/module/cicd', duration: '30 min' },
+      { type: 'learn', label: 'CI/CD — Pipelines, GitHub Actions & secrets', link: '/module/cicd', duration: '60 min' },
+      { type: 'learn', label: 'CI/CD — Deployment strategies & release management', link: '/module/cicd', duration: '45 min' },
+      { type: 'learn', label: 'Docker — Fundamentals & optimization', link: '/module/docker', duration: '45 min' },
+      { type: 'project', label: 'Dockerize your FastAPI app + write a CI workflow', link: '/module/cicd', duration: '60 min' },
+    ],
+  },
+  {
+    week: 15, month: 4, title: 'Week 15: Networking, Linux & Cloud',
     tasks: [
       { type: 'learn', label: 'Networking — Request lifecycle & DNS', link: '/module/networking', duration: '60 min' },
       { type: 'learn', label: 'Networking — TLS & protocols', link: '/module/networking', duration: '45 min' },
       { type: 'learn', label: 'Linux — Shell & debugging', link: '/module/linux', duration: '45 min' },
-      { type: 'learn', label: 'Git — Branching & workflows', link: '/module/git', duration: '30 min' },
-    ],
-  },
-  {
-    week: 14, month: 4, title: 'Week 14: Docker & CI/CD',
-    tasks: [
-      { type: 'learn', label: 'Docker — Fundamentals & optimization', link: '/module/docker', duration: '60 min' },
-      { type: 'learn', label: 'CI/CD — Pipelines & deployment strategies', link: '/module/cicd', duration: '45 min' },
-      { type: 'project', label: 'Dockerize your FastAPI app', link: '/module/docker', duration: '60 min' },
-    ],
-  },
-  {
-    week: 15, month: 4, title: 'Week 15: Kubernetes & Cloud',
-    tasks: [
-      { type: 'learn', label: 'Kubernetes — Core concepts', link: '/module/kubernetes', duration: '60 min' },
-      { type: 'learn', label: 'Kubernetes — Production operations', link: '/module/kubernetes', duration: '45 min' },
       { type: 'learn', label: 'Cloud — AWS/GCP patterns', link: '/module/cloud', duration: '45 min' },
     ],
   },
   {
-    week: 16, month: 4, title: 'Week 16: Quality, Security & Observability',
+    week: 16, month: 4, title: 'Week 16: Kubernetes & Production Quality',
     tasks: [
-      { type: 'learn', label: 'Testing — Pyramid & strategies', link: '/module/testing', duration: '45 min' },
-      { type: 'learn', label: 'Security — OWASP & JWT', link: '/module/security', duration: '60 min' },
-      { type: 'learn', label: 'Observability — Logs, metrics, traces', link: '/module/observability', duration: '45 min' },
-      { type: 'review', label: 'Month 4 review', link: '/dashboard', duration: '15 min' },
+      { type: 'learn', label: 'Kubernetes — Core concepts', link: '/module/kubernetes', duration: '60 min' },
+      { type: 'learn', label: 'Kubernetes — Production operations', link: '/module/kubernetes', duration: '45 min' },
+      { type: 'learn', label: 'Testing — Pyramid & quality gates in CI', link: '/module/testing', duration: '30 min' },
+      { type: 'learn', label: 'Security & Observability', link: '/module/security', duration: '45 min' },
+      { type: 'review', label: 'Month 4 review — Dashboard progress', link: '/dashboard', duration: '15 min' },
     ],
   },
   {

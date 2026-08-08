@@ -6,6 +6,7 @@ import { csLessons } from './cs-fundamentals';
 import { dsaLessons } from './dsa';
 import { coreLessons } from './core-modules';
 import { aiCurriculumLessons } from './ai-curriculum';
+import { devopsLessons } from './devops';
 
 const allLessons: Record<string, string> = {
   ...systemDesignLessons,
@@ -16,6 +17,7 @@ const allLessons: Record<string, string> = {
   ...dsaLessons,
   ...coreLessons,
   ...aiCurriculumLessons,
+  ...devopsLessons,
 };
 
 export function getDetailedLesson(moduleId: string, sectionId: string): string | undefined {
