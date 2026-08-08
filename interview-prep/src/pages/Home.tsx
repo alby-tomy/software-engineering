@@ -59,6 +59,23 @@ export function Home() {
       </section>
 
       <section className="home-section">
+        <h2>🎯 Practice Tools</h2>
+        <p className="section-desc">Test yourself with interactive flashcards and timed mock interviews.</p>
+        <div className="practice-grid">
+          <Link to="/flashcards" className="practice-card">
+            <span className="practice-icon">🃏</span>
+            <h3>Flashcards</h3>
+            <p>Flip through 200+ interview questions. Filter by module or difficulty level. Mark cards as known.</p>
+          </Link>
+          <Link to="/mock-interview" className="practice-card">
+            <span className="practice-icon">🎤</span>
+            <h3>Mock Interview</h3>
+            <p>Timed senior-level practice sessions. Answer out loud, take notes, compare with model answers.</p>
+          </Link>
+        </div>
+      </section>
+
+      <section className="home-section">
         <h2>📚 Curriculum Stages</h2>
         <p className="section-desc">
           Progress through 10 stages from CS fundamentals to staff-level engineering thinking.
