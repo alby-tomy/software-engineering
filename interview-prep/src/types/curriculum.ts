@@ -144,6 +144,8 @@ export interface CapstoneStep {
   acceptanceCriteria: string[];
   architectureNote?: string;
   starterCode?: string;
+  /** Paths in the pulsegrid/ repo for this week's implementation */
+  codePaths?: string[];
 }
 
 export interface CapstoneProject {

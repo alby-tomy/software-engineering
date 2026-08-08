@@ -35,6 +35,11 @@ export const capstoneSteps: CapstoneStep[] = [
     architectureNote: `Alert lifecycle: Webhook receives alert → deduplicate (Redis) → persist (PostgreSQL) → 
 correlate with service dependencies → create/update Incident → notify on-call → index for search (Elasticsearch) → 
 AI copilot suggests runbook steps (Month 6).`,
+    codePaths: [
+      'pulsegrid/README.md',
+      'pulsegrid/docs/adr/001-monolith-first.md',
+      'pulsegrid/docs/domain-model.md',
+    ],
   },
   {
     id: 'step-02-python-foundation',
@@ -89,6 +94,12 @@ class Alert(BaseModel):
     severity: Severity
     source: str  # prometheus, datadog, custom
     received_at: datetime = Field(default_factory=datetime.utcnow)`,
+    codePaths: [
+      'pulsegrid/pyproject.toml',
+      'pulsegrid/pulsegrid/models/domain.py',
+      'pulsegrid/pulsegrid/models/enums.py',
+      'pulsegrid/tests/unit/test_models.py',
+    ],
   },
   {
     id: 'step-03-async-ingestion',
@@ -120,6 +131,11 @@ class Alert(BaseModel):
       'API responds 202 before alert is fully processed',
       'Queue full returns 503 with Retry-After',
       'Worker processes alerts without blocking the event loop',
+    ],
+    codePaths: [
+      'pulsegrid/pulsegrid/core/queue.py',
+      'pulsegrid/pulsegrid/api/routers/webhooks.py',
+      'pulsegrid/pulsegrid/worker/runner.py',
     ],
   },
   {
@@ -153,6 +169,12 @@ class Alert(BaseModel):
       'Worker pool respects max concurrency limit',
       'Prometheus webhook payload correctly parsed to Alert model',
     ],
+    codePaths: [
+      'pulsegrid/pulsegrid/core/worker_pool.py',
+      'pulsegrid/pulsegrid/core/dedup.py',
+      'pulsegrid/pulsegrid/core/parsers.py',
+      'pulsegrid/tests/unit/test_parsers.py',
+    ],
   },
   {
     id: 'step-05-dsa-dedup',
@@ -185,6 +207,12 @@ class Alert(BaseModel):
       'Dedup lookup is O(1) average case',
       'Flapping service triggers single grouped incident',
     ],
+    codePaths: [
+      'pulsegrid/pulsegrid/core/priority_queue.py',
+      'pulsegrid/pulsegrid/core/dedup.py',
+      'pulsegrid/tests/unit/test_priority_queue.py',
+      'pulsegrid/tests/unit/test_dedup.py',
+    ],
   },
   {
     id: 'step-06-service-graph',
@@ -216,6 +244,11 @@ class Alert(BaseModel):
       'Alert on leaf service suggests upstream root cause',
       'Blast radius returns all downstream affected services',
       'Circular dependency detected and flagged in graph validation',
+    ],
+    codePaths: [
+      'pulsegrid/pulsegrid/services/service_graph.py',
+      'pulsegrid/pulsegrid/api/routers/services.py',
+      'pulsegrid/tests/unit/test_service_graph.py',
     ],
   },
   {
@@ -263,6 +296,13 @@ CREATE TABLE incidents (
 );
 CREATE INDEX idx_incidents_service_status ON incidents(service_id, status);
 CREATE INDEX idx_incidents_severity_created ON incidents(severity, created_at DESC);`,
+    codePaths: [
+      'pulsegrid/pulsegrid/db/models.py',
+      'pulsegrid/pulsegrid/db/repository.py',
+      'pulsegrid/alembic/versions/001_initial_schema.py',
+      'pulsegrid/alembic/versions/002_incident_timeline.py',
+      'pulsegrid/docs/schema.md',
+    ],
   },
   {
     id: 'step-08-databases-redis',
@@ -294,6 +334,10 @@ CREATE INDEX idx_incidents_severity_created ON incidents(severity, created_at DE
       'Cache hit ratio > 90% for active incident queries',
       'Cache invalidated within 1s of incident status change',
       'ES search returns incidents by title fuzzy match',
+    ],
+    codePaths: [
+      'pulsegrid/pulsegrid/cache/redis_cache.py',
+      'pulsegrid/docker-compose.yml',
     ],
   },
   {
@@ -327,6 +371,12 @@ CREATE INDEX idx_incidents_severity_created ON incidents(severity, created_at DE
       'All endpoints require auth except /webhooks and /health',
       'Invalid payloads return 422 with field-level errors',
       'p95 latency < 100ms for GET /incidents (cached)',
+    ],
+    codePaths: [
+      'pulsegrid/pulsegrid/api/main.py',
+      'pulsegrid/pulsegrid/api/auth.py',
+      'pulsegrid/pulsegrid/api/routers/incidents.py',
+      'pulsegrid/tests/integration/test_api.py',
     ],
   },
   {

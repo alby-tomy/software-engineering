@@ -273,3 +273,39 @@
 .step-nav button:hover {
   border-color: var(--accent);
 }
+
+.capstone-repo-link {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  border-left: 3px solid var(--accent);
+  font-size: 0.95rem;
+}
+
+.code-paths-block {
+  background: var(--bg-secondary);
+  border-left: 3px solid #22c55e;
+}
+
+.code-paths-intro {
+  margin-bottom: 0.5rem;
+  color: var(--text-secondary);
+}
+
+.code-paths-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.code-paths-list li {
+  padding: 0.25rem 0;
+}
+
+.code-paths-list code {
+  font-size: 0.85rem;
+  background: var(--bg-primary);
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+}

@@ -18,6 +18,11 @@ export function CapstoneProject() {
         <h1>🚨 {capstoneProject.name}</h1>
         <p className="capstone-tagline">{capstoneProject.tagline}</p>
         <p className="capstone-desc">{capstoneProject.description}</p>
+        <div className="capstone-repo-link">
+          <strong>Runnable codebase:</strong>{' '}
+          <code>pulsegrid/</code> in this repository — clone, run <code>docker compose up</code>, then{' '}
+          <code>pytest</code> to verify each week&apos;s implementation.
+        </div>
         <div className="capstone-meta">
           <span>📅 24 weekly steps</span>
           <span>🛠️ {capstoneProject.techStack.length} technologies</span>
@@ -102,6 +107,20 @@ export function CapstoneProject() {
               {step.implementationTasks.map((t) => <li key={t}>{t}</li>)}
             </ol>
           </div>
+
+          {step.codePaths && step.codePaths.length > 0 && (
+            <div className="step-block code-paths-block">
+              <h4>📁 Code in This Repo</h4>
+              <p className="code-paths-intro">
+                This week&apos;s implementation lives in the repo — open these files as you learn:
+              </p>
+              <ul className="code-paths-list">
+                {step.codePaths.map((path) => (
+                  <li key={path}><code>{path}</code></li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           {step.architectureNote && (
             <div className="step-block arch-block">
