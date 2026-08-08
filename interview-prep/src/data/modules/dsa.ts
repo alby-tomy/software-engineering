@@ -146,6 +146,97 @@ Template: \`while lo < hi: mid = (lo + hi) // 2\`
 5. **Test** — walk through edge cases
 6. **Optimize** — if time permits`,
     },
+    {
+      id: 'graphs',
+      title: 'Graph Algorithms',
+      content: `### Representations
+Adjacency list (sparse graphs): O(V+E) space. Adjacency matrix (dense): O(V²).
+
+### BFS
+Shortest path in unweighted graph. Level-order traversal. Queue-based. O(V+E).
+
+### DFS
+Connectivity, cycle detection, topological sort. Stack or recursion. O(V+E).
+
+### Topological Sort
+Ordering where all edges go forward. Use for task scheduling, build dependencies. Kahn's algorithm (BFS) or DFS-based.
+
+### Dijkstra
+Shortest path with non-negative weights. Min-heap priority queue. O((V+E) log V).
+
+### Union-Find
+Connected components, cycle detection in undirected graphs. Near O(1) amortized with path compression.`,
+      codeExamples: [
+        {
+          title: 'BFS shortest path',
+          language: 'python',
+          code: `from collections import deque
+
+def bfs_shortest_path(graph, start, end):
+    queue = deque([(start, [start])])
+    visited = {start}
+    while queue:
+        node, path = queue.popleft()
+        if node == end:
+            return path
+        for neighbor in graph[node]:
+            if neighbor not in visited:
+                visited.add(neighbor)
+                queue.append((neighbor, path + [neighbor]))
+    return None`,
+        },
+      ],
+    },
+    {
+      id: 'dynamic-programming',
+      title: 'Dynamic Programming Patterns',
+      content: `### When to use DP
+Optimal substructure + overlapping subproblems.
+
+### Common patterns
+1. **0/1 Knapsack** — include/exclude decisions
+2. **Unbounded Knapsack** — unlimited use of items
+3. **LCS/LIS** — sequence comparison
+4. **Grid paths** — 2D DP
+5. **Interval DP** — merge stones, burst balloons
+6. **State machine** — buy/sell stock with cooldown
+
+### Approach
+1. Define state clearly
+2. Write recurrence
+3. Identify base cases
+4. Top-down (memo) or bottom-up (tabulation)
+5. Optimize space if only previous row needed`,
+      codeExamples: [
+        {
+          title: 'Coin change (bottom-up DP)',
+          language: 'python',
+          code: `def coin_change(coins, amount):
+    dp = [float('inf')] * (amount + 1)
+    dp[0] = 0
+    for a in range(1, amount + 1):
+        for coin in coins:
+            if coin <= a:
+                dp[a] = min(dp[a], dp[a - coin] + 1)
+    return dp[amount] if dp[amount] != float('inf') else -1`,
+        },
+      ],
+    },
+    {
+      id: 'trees',
+      title: 'Tree Problems',
+      content: `### Binary Search Tree
+Left < Root < Right. O(log n) search/insert/delete (balanced).
+
+### Common patterns
+- **Recursion**: most tree problems are recursive
+- **Level-order**: BFS with queue
+- **Inorder traversal**: sorted order for BST
+- **Lowest Common Ancestor**: path comparison or recursive
+
+### Trie
+Prefix tree for autocomplete, spell check. O(m) where m = key length.`,
+    },
   ],
   questions: [
     {
@@ -176,6 +267,10 @@ Template: \`while lo < hi: mid = (lo + hi) // 2\`
       answer:
         '1) Constant factors and cache behavior. 2) Memory allocation patterns (GC pressure). 3) I/O in the loop. 4) Lock contention in concurrent access. 5) Data size — does n actually fit assumptions? 6) Profile hot path. 7) Consider approximation or preprocessing.',
     },
+    { id: 'dsa-q5', level: 'application', question: 'How does Union-Find work?', answer: 'Array of parent pointers. find() with path compression. union() by rank/size. Amortized O(α(n)) ≈ O(1) per operation. Used for connectivity, Kruskal MST, cycle detection.' },
+    { id: 'dsa-q6', level: 'application', question: 'When do you use BFS vs DFS?', answer: 'BFS: shortest path (unweighted), level-order, nearest neighbor. DFS: exhaustive search, topological sort, connected components, path finding, cycle detection.' },
+    { id: 'dsa-q7', level: 'understanding', question: 'What is dynamic programming?', answer: 'Optimization technique breaking problem into overlapping subproblems with optimal substructure. Store results to avoid recomputation. Top-down (memoization) or bottom-up (tabulation).' },
+    { id: 'dsa-q8', level: 'optimization', question: 'O(n) algorithm still slow in production. What next?', answer: 'Check constant factors, cache behavior, memory allocation, I/O in loop, lock contention. Consider preprocessing, approximation, or parallelization. Profile the hot path.' },
   ],
   seniorScenarios: [
     {

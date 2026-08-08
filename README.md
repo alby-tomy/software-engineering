@@ -6,10 +6,10 @@ Built for engineers targeting roles like Micro1, senior backend, full-stack, and
 
 ## What's Inside
 
-- **26 modules** covering CS fundamentals through staff-level engineering
+- **36 modules** covering CS fundamentals through staff-level engineering
 - **10 curriculum stages** from beginner to senior
 - **4 learning paths** (Backend Senior, Full-Stack, Systems, Micro1 Prep)
-- **150+ interview questions** at 9 depth levels (Recall → Senior)
+- **200+ interview questions** at 9 depth levels (Recall → Senior)
 - **Senior scenarios** with structured approach and follow-ups
 - **Progress tracking** (saved in browser localStorage)
 - **Full-text search** across modules and questions
@@ -18,14 +18,17 @@ Built for engineers targeting roles like Micro1, senior backend, full-stack, and
 
 | Category | Modules |
 |----------|---------|
-| Foundations | CS Fundamentals, DSA, SQL |
+| Foundations | CS Fundamentals, DSA, Concurrency |
 | Languages | Python, Go, C++ |
-| Backend | FastAPI, REST API, GraphQL |
+| Databases | SQL, PostgreSQL/Redis, MongoDB, Elasticsearch |
+| Backend | FastAPI, REST API, GraphQL, gRPC |
+| Architecture | Design Patterns, System Design, Microservices |
+| Messaging | Message Queues (Kafka), Event-Driven Architecture |
 | Frontend | React, Next.js |
-| Infrastructure | Networking, Linux, Git, Docker, Kubernetes, Cloud |
-| Architecture | System Design, Distributed Systems |
+| Infrastructure | Networking, Linux, Git, Docker, CI/CD, Kubernetes, Cloud |
+| Distributed | Distributed Systems, Message Queues, Event-Driven |
 | Quality | Testing, Performance, Observability, Security |
-| Advanced | AI-Assisted Engineering, Senior Engineering |
+| Career | Behavioral Interviews, AI Engineering, Senior Engineering |
 
 ## Quick Start
 
@@ -44,6 +47,19 @@ cd interview-prep
 npm run build
 npm run preview
 ```
+
+## New Modules Added
+
+- **Concurrency & Parallelism** — threads, async, worker pools, backpressure
+- **Message Queues** — Kafka, RabbitMQ, SQS, delivery guarantees
+- **Microservices** — service decomposition, API gateway, sagas
+- **Design Patterns** — GoF patterns, architectural patterns
+- **Behavioral Interviews** — STAR method, leadership questions
+- **gRPC** — Protocol Buffers, streaming, vs REST
+- **CI/CD** — pipelines, blue-green, canary deployments
+- **Event-Driven Architecture** — event sourcing, CQRS
+- **MongoDB** — document modeling, aggregation
+- **Elasticsearch** — full-text search, inverted indexes
 
 ## Learning Framework
 
@@ -66,27 +82,12 @@ Every topic progresses through 9 levels:
 For Micro1 / senior backend interviews:
 
 ```
-CS Fundamentals → Python → DSA → SQL → FastAPI → Databases
-→ System Design → Networking → Security → Senior Engineering
+CS Fundamentals → Python → Concurrency → DSA → SQL → FastAPI
+→ System Design → Microservices → Message Queues → Security
+→ Behavioral → Senior Engineering
 ```
 
 Use the **Micro1 Interview Prep** learning path in the app for an 8-week structured plan.
-
-## Project Structure
-
-```
-interview-prep/
-├── src/
-│   ├── components/     # UI components (Sidebar, QuestionCard, etc.)
-│   ├── data/
-│   │   ├── modules/    # 26 curriculum modules with content
-│   │   ├── curriculum.ts
-│   │   └── learning-paths.ts
-│   ├── hooks/          # Progress tracking
-│   ├── pages/          # Home, Module, Search, Learning Paths
-│   └── types/          # TypeScript types
-└── index.html
-```
 
 ## License
 

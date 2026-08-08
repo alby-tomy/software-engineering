@@ -246,6 +246,98 @@ def profile_function(func, *args, **kwargs):
         },
       ],
     },
+    {
+      id: 'python-fundamentals',
+      title: 'Python Fundamentals — Must Know',
+      content: `### Mutable vs Immutable
+Mutable: list, dict, set. Immutable: int, float, str, tuple, frozenset.
+
+### is vs ==
+\`is\` checks identity (same object in memory). \`==\` checks equality (same value).
+
+### List vs Tuple
+List: mutable, slower, more memory. Tuple: immutable, hashable (can be dict key), faster iteration.
+
+### Dictionary internals
+Hash table with open addressing. O(1) average lookup. Keys must be hashable. Insertion order preserved (3.7+).
+
+### *args and **kwargs
+\*args: positional arguments as tuple. \*\*kwargs: keyword arguments as dict. Used for decorators, wrappers, flexible APIs.
+
+### Generators vs Iterators
+Generator: lazy, memory-efficient, uses \`yield\`. Iterator: object with \`__iter__\` and \`__next__\`. Generator is a type of iterator.
+
+### Context managers
+\`__enter__\` and \`__exit__\` methods. \`with\` statement guarantees cleanup. Use for files, locks, DB connections.`,
+      codeExamples: [
+        {
+          title: 'Generator for memory-efficient processing',
+          language: 'python',
+          code: `def read_large_file(path):
+    with open(path) as f:
+        for line in f:  # Generator — one line in memory
+            yield line.strip()
+
+# Process 10GB file with constant memory
+for line in read_large_file('huge.log'):
+    process(line)`,
+        },
+      ],
+      practicalExercise: 'Implement a context manager that times code execution and logs duration.',
+    },
+    {
+      id: 'type-hints',
+      title: 'Type Hints & Modern Python',
+      content: `### Why type hints
+- Catch bugs before runtime (mypy, pyright)
+- Self-documenting code
+- Better IDE support
+
+### Common patterns
+\`\`\`python
+from typing import Optional, List, Dict, Union, Callable
+from collections.abc import Sequence
+
+def get_user(user_id: int) -> Optional[User]: ...
+def process_items(items: Sequence[str]) -> list[str]: ...
+\`\`\`
+
+### dataclasses vs Pydantic
+dataclasses: simple data containers. Pydantic: validation, serialization, settings management.
+
+### Protocols (structural subtyping)
+Define interface by behavior, not inheritance. "If it walks like a duck..."
+
+### __slots__
+Restrict attributes, reduce memory (~40% for many instances). Trade-off: no dynamic attributes.`,
+    },
+    {
+      id: 'packaging',
+      title: 'Packaging, Imports & Project Structure',
+      content: `### Import machinery
+1. Check sys.modules cache
+2. Find module (sys.path, package __path__)
+3. Load and execute module code
+4. Cache in sys.modules
+
+### Circular imports
+Problem: module A imports B, B imports A. Fix: import inside function, restructure, or use TYPE_CHECKING.
+
+### Project structure (production)
+\`\`\`
+app/
+├── api/          # Route handlers
+├── core/         # Config, security
+├── models/       # DB models
+├── schemas/      # Pydantic schemas
+├── services/     # Business logic
+├── repositories/ # Data access
+└── main.py
+\`\`\`
+
+### Virtual environments
+Always use venv/poetry. Never install globally. Pin dependencies in requirements.txt or pyproject.toml.`,
+    },
   ],
   questions: [
     {
@@ -309,6 +401,10 @@ def profile_function(func, *args, **kwargs):
         '1) Load balancer → N API pods (uvicorn workers). 2) Per-downstream circuit breakers (fail fast after threshold). 3) Aggressive timeouts (500ms fast services, 2s slow with budget). 4) Retry only idempotent ops, max 2 retries with jitter. 5) Bulkhead: separate connection pools per downstream. 6) Cache responses where possible (Redis, TTL). 7) Queue non-critical path to workers. 8) Rate limit per client. 9) Shed load when queue depth exceeds threshold. 10) Metrics: p50/p95/p99 per downstream, circuit state, queue depth. 11) Fallback responses for degraded mode.',
       keyPoints: ['Circuit breakers', 'Timeouts', 'Bulkheads', 'Caching', 'Load shedding', 'Observability'],
     },
+    { id: 'py-q9', level: 'recall', question: 'What is the difference between a list and a tuple?', answer: 'List is mutable, uses more memory, cannot be dict key. Tuple is immutable, hashable (if all elements hashable), faster iteration, can be dict key.' },
+    { id: 'py-q10', level: 'understanding', question: 'How does Python dictionary lookup work?', answer: 'Hash the key → index into hash table → handle collisions via open addressing. Average O(1). Worst case O(n) if all keys collide. Keys must be hashable (immutable).' },
+    { id: 'py-q11', level: 'application', question: 'When would you use a generator over a list?', answer: 'Large/infinite datasets where you process one item at a time. Pipelines (read → transform → write). Memory-constrained environments. When you may not need all items.' },
+    { id: 'py-q12', level: 'understanding', question: 'Explain reference counting and cyclic GC.', answer: 'Reference counting frees objects when count hits 0. Cycles (A→B→A) prevent count reaching 0. Generational cyclic GC detects and collects cycles in container objects periodically.' },
   ],
   seniorScenarios: [
     {
