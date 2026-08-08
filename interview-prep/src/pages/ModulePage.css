@@ -1,0 +1,317 @@
+.module-page {
+  max-width: 900px;
+}
+
+.module-header {
+  margin-bottom: 2rem;
+}
+
+.module-breadcrumb {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+.module-breadcrumb a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.module-title-row {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.module-icon {
+  font-size: 2.5rem;
+}
+
+.module-title-row h1 {
+  font-size: 1.75rem;
+  margin-bottom: 0.35rem;
+}
+
+.module-desc {
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.module-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.badge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.6rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  text-transform: capitalize;
+}
+
+.progress-badge {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.objectives {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem;
+  font-size: 0.9rem;
+}
+
+.objectives ul {
+  margin: 0.5rem 0 0 1.25rem;
+}
+
+.objectives li {
+  margin-bottom: 0.25rem;
+  color: var(--text-secondary);
+}
+
+.module-tabs {
+  display: flex;
+  gap: 0.25rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+}
+
+.tab-btn {
+  padding: 0.6rem 1rem;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+
+.tab-btn:hover {
+  color: var(--text-primary);
+}
+
+.tab-btn.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+  font-weight: 600;
+}
+
+.learn-layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 1.5rem;
+}
+
+.section-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.section-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  transition: all 0.15s;
+}
+
+.section-nav-item:hover {
+  background: var(--bg-hover);
+}
+
+.section-nav-item.active {
+  background: var(--accent-bg);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.section-nav-item.done .section-nav-num {
+  background: var(--accent);
+  color: white;
+}
+
+.section-nav-num {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--bg-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.section-nav-title {
+  flex: 1;
+  line-height: 1.3;
+}
+
+.check {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.section-content h2 {
+  font-size: 1.35rem;
+  margin-bottom: 1rem;
+}
+
+.exercise-box {
+  background: var(--accent-bg);
+  border: 1px solid var(--accent);
+  border-radius: 10px;
+  padding: 1rem;
+  margin: 1.5rem 0;
+}
+
+.exercise-box p {
+  margin-top: 0.5rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.complete-btn {
+  margin-top: 1.5rem;
+  padding: 0.6rem 1.25rem;
+  background: var(--accent-bg);
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.15s;
+}
+
+.complete-btn:hover {
+  background: var(--accent);
+  color: white;
+}
+
+.complete-btn.completed {
+  background: var(--accent);
+  color: white;
+}
+
+.section-nav-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+}
+
+.section-nav-buttons button {
+  padding: 0.5rem 1rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--text-primary);
+}
+
+.scenario-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.scenario-card h3 {
+  margin-bottom: 1rem;
+}
+
+.scenario-section {
+  margin-bottom: 1rem;
+}
+
+.scenario-section p {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-top: 0.35rem;
+}
+
+.scenario-section ul {
+  margin: 0.35rem 0 0 1.25rem;
+  color: var(--text-secondary);
+}
+
+.resource-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  text-decoration: none;
+  color: inherit;
+  margin-bottom: 0.5rem;
+  transition: all 0.15s;
+}
+
+.resource-link:hover {
+  border-color: var(--accent);
+}
+
+.resource-type {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 600;
+  min-width: 80px;
+}
+
+.resource-title {
+  flex: 1;
+}
+
+.resource-arrow {
+  color: var(--text-muted);
+}
+
+.empty-state {
+  color: var(--text-muted);
+  text-align: center;
+  padding: 2rem;
+}
+
+.not-found {
+  text-align: center;
+  padding: 3rem;
+}
+
+@media (max-width: 768px) {
+  .learn-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .section-nav {
+    flex-direction: row;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+
+  .section-nav-item {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+}
