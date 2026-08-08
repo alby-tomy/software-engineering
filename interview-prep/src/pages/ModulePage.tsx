@@ -76,7 +76,7 @@ export function ModulePage() {
         {moduleCapstoneSteps.length > 0 && (
           <div className="capstone-module-box">
             <strong>🚨 PulseGrid Capstone — Project Steps in This Module</strong>
-            <p>Apply what you learn by building the real-world incident platform step by step:</p>
+            <p>Apply what you learn by building PulseGrid — each step includes the <strong>full lesson with code</strong> on the capstone page:</p>
             <ul>
               {moduleCapstoneSteps.map((step) => (
                 <li key={step.id}>

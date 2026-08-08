@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { sixMonthCourse } from '../data/six-month-course';
 import { capstoneProject } from '../data/capstone-project';
+import { capstoneSteps } from '../data/capstone-steps';
 import { getModule } from '../data/modules';
 import './SixMonthCourse.css';
 
@@ -72,6 +73,9 @@ export function SixMonthCourse() {
                         );
                       })}
                     </div>
+                    <Link to={`/capstone#week-${week.week}`} className="week-capstone-link">
+                      🚨 PulseGrid capstone — Week {week.week}: {capstoneSteps.find((s) => s.week === week.week)?.title ?? 'Build step'} →
+                    </Link>
                     <Link to="/daily-plan" className="week-plan-link">
                       View daily tasks for Week {week.week} →
                     </Link>
