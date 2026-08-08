@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { capstoneProject } from '../data/capstone-project';
+import { getCapstoneTextbookLesson } from '../data/detailed-lessons/textbook-pulsegrid';
+import { getCapstoneFullLesson } from '../data/capstone-embedded-walkthrough';
 import { MarkdownContent } from '../components/MarkdownContent';
 import { useCapstoneProgress } from '../hooks/useCapstoneProgress';
 import './CapstoneProject.css';
@@ -10,6 +12,10 @@ export function CapstoneProject() {
   const { isStepComplete, toggleStep, getProgress } = useCapstoneProgress();
   const step = capstoneProject.steps.find((s) => s.week === selectedWeek) ?? capstoneProject.steps[0];
   const progress = getProgress(capstoneProject.steps.length);
+  const fullLesson = getCapstoneFullLesson(step.id, getCapstoneTextbookLesson(step.id), {
+    architectureNote: step.architectureNote,
+    starterCode: step.starterCode,
+  });
 
   return (
     <div className="capstone-page">
@@ -94,6 +100,18 @@ export function CapstoneProject() {
             <p>{step.realWorldProblem}</p>
           </div>
 
+          {fullLesson && (
+            <div className="step-block textbook-chapter-block">
+              <h4>📖 Full Lesson — Concepts, Code &amp; Commands</h4>
+              <p className="textbook-chapter-intro">
+                Everything you need is on this page: textbook explanations, full code snippets, SQL, configs, and shell commands — not just file references.
+              </p>
+              <div className="textbook-chapter-content">
+                <MarkdownContent content={fullLesson} />
+              </div>
+            </div>
+          )}
+
           <div className="step-block">
             <h4>🎯 Objectives</h4>
             <ul>
@@ -107,34 +125,6 @@ export function CapstoneProject() {
               {step.implementationTasks.map((t) => <li key={t}>{t}</li>)}
             </ol>
           </div>
-
-          {step.codePaths && step.codePaths.length > 0 && (
-            <div className="step-block code-paths-block">
-              <h4>📁 Code in This Repo</h4>
-              <p className="code-paths-intro">
-                This week&apos;s implementation lives in the repo — open these files as you learn:
-              </p>
-              <ul className="code-paths-list">
-                {step.codePaths.map((path) => (
-                  <li key={path}><code>{path}</code></li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {step.architectureNote && (
-            <div className="step-block arch-block">
-              <h4>🏗️ Architecture Note</h4>
-              <pre><code>{step.architectureNote}</code></pre>
-            </div>
-          )}
-
-          {step.starterCode && (
-            <div className="step-block">
-              <h4>💻 Starter Code</h4>
-              <pre><code>{step.starterCode}</code></pre>
-            </div>
-          )}
 
           <div className="step-block">
             <h4>📦 Deliverables</h4>

@@ -309,3 +309,44 @@
   padding: 0.15rem 0.4rem;
   border-radius: 4px;
 }
+
+.textbook-chapter-block {
+  border-left: 3px solid #6366f1;
+  background: var(--bg-secondary);
+}
+
+.textbook-chapter-intro {
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+
+.textbook-chapter-content {
+  max-height: none;
+  line-height: 1.7;
+}
+
+.textbook-chapter-content h1 {
+  font-size: 1.5rem;
+  margin-top: 0;
+}
+
+.textbook-chapter-content h2 {
+  font-size: 1.2rem;
+  margin-top: 1.5rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.35rem;
+}
+
+.textbook-chapter-content h3 {
+  font-size: 1.05rem;
+  margin-top: 1.25rem;
+}
+
+.textbook-chapter-content blockquote {
+  border-left: 3px solid var(--accent);
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+  background: var(--bg-primary);
+  border-radius: 0 6px 6px 0;
+}
