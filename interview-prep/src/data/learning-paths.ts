@@ -1,6 +1,31 @@
 import type { LearningPath } from '../types/curriculum';
+import { sixMonthCourse } from './six-month-course';
+
+const sixMonthModuleIds = [
+  ...new Set(
+    sixMonthCourse.phases.flatMap((p) => p.weeks.flatMap((w) => w.moduleIds))
+  ),
+];
+
+const sixMonthMilestones = sixMonthCourse.phases.flatMap((p) =>
+  p.weeks.map((w) => ({
+    week: w.week,
+    title: w.title,
+    modules: w.moduleIds,
+  }))
+);
 
 export const learningPaths: LearningPath[] = [
+  {
+    id: 'six-month-mastery',
+    title: '6-Month Software Engineering Mastery',
+    description:
+      'Complete university-style bootcamp: CS foundations → Python → DSA → backend APIs → production engineering → system design → generative AI, RAG, agentic systems → interview readiness.',
+    targetRole: 'Senior Software / AI Engineer',
+    duration: '24 weeks (~12–15 hrs/week)',
+    moduleIds: sixMonthModuleIds,
+    milestones: sixMonthMilestones,
+  },
   {
     id: 'backend-senior',
     title: 'Senior Backend Engineer',

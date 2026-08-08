@@ -1,22 +1,32 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getAllDailyWeeks, getDailyPlan } from '../data/practice';
+import { getDailyPlan } from '../data/practice';
+import { sixMonthDailyPlans } from '../data/six-month-daily-plan';
+import { sixMonthCourse } from '../data/six-month-course';
 import { useProgress } from '../hooks/useProgress';
 import './DailyPlan.css';
+
+type PlanType = 'six-month' | 'micro1';
 
 const TASK_ICONS: Record<string, string> = {
   learn: '📖',
   practice: '💻',
   quiz: '🧪',
   review: '🔄',
+  project: '🛠️',
 };
 
 export function DailyPlan() {
+  const [planType, setPlanType] = useState<PlanType>('six-month');
   const [selectedWeek, setSelectedWeek] = useState(1);
   const { recordStudySession } = useProgress();
   const [completedTasks, setCompletedTasks] = useState<Set<number>>(new Set());
-  const plan = getDailyPlan(selectedWeek);
-  const allWeeks = getAllDailyWeeks();
+
+  const isSixMonth = planType === 'six-month';
+  const maxWeeks = isSixMonth ? 24 : 8;
+  const plan = isSixMonth
+    ? sixMonthDailyPlans.find((w) => w.week === selectedWeek) ?? sixMonthDailyPlans[0]
+    : getDailyPlan(selectedWeek);
 
   function toggleTask(index: number) {
     setCompletedTasks((prev) => {
@@ -30,25 +40,73 @@ export function DailyPlan() {
     });
   }
 
+  function switchPlan(type: PlanType) {
+    setPlanType(type);
+    setSelectedWeek(1);
+    setCompletedTasks(new Set());
+  }
+
   const taskProgress = plan.tasks.length > 0
     ? Math.round((completedTasks.size / plan.tasks.length) * 100)
     : 0;
+
+  const currentMonth = isSixMonth && 'month' in plan ? plan.month : undefined;
 
   return (
     <div className="daily-plan">
       <h1>📅 Daily Study Plan</h1>
       <p className="plan-intro">
-        8-week Micro1 Interview Prep schedule. Select a week and complete each task.
+        {isSixMonth
+          ? `${sixMonthCourse.title} — 24-week schedule with daily tasks. ~${sixMonthCourse.hoursPerWeek} recommended.`
+          : '8-week Micro1 Interview Prep schedule. Select a week and complete each task.'}
       </p>
 
+      <div className="plan-type-selector">
+        <button
+          className={`plan-type-btn ${isSixMonth ? 'active' : ''}`}
+          onClick={() => switchPlan('six-month')}
+        >
+          🎓 6-Month Course (24 weeks)
+        </button>
+        <button
+          className={`plan-type-btn ${!isSixMonth ? 'active' : ''}`}
+          onClick={() => switchPlan('micro1')}
+        >
+          ⚡ Micro1 Prep (8 weeks)
+        </button>
+        {!isSixMonth && (
+          <Link to="/course" className="plan-course-link">
+            View full 6-month roadmap →
+          </Link>
+        )}
+      </div>
+
+      {isSixMonth && (
+        <div className="month-labels">
+          {sixMonthCourse.phases.map((phase) => (
+            <button
+              key={phase.month}
+              className={`month-label ${currentMonth === phase.month ? 'active' : ''}`}
+              onClick={() => {
+                const firstWeek = phase.weeks[0]?.week ?? 1;
+                setSelectedWeek(firstWeek);
+                setCompletedTasks(new Set());
+              }}
+            >
+              M{phase.month}
+            </button>
+          ))}
+        </div>
+      )}
+
       <div className="week-selector">
-        {allWeeks.map((_, i) => (
+        {Array.from({ length: maxWeeks }, (_, i) => i + 1).map((week) => (
           <button
-            key={i}
-            className={`week-btn ${selectedWeek === i + 1 ? 'active' : ''}`}
-            onClick={() => { setSelectedWeek(i + 1); setCompletedTasks(new Set()); }}
+            key={week}
+            className={`week-btn ${selectedWeek === week ? 'active' : ''}`}
+            onClick={() => { setSelectedWeek(week); setCompletedTasks(new Set()); }}
           >
-            Week {i + 1}
+            W{week}
           </button>
         ))}
       </div>
@@ -89,12 +147,12 @@ export function DailyPlan() {
 
       {taskProgress === 100 && (
         <div className="week-complete">
-          🎉 Week {selectedWeek} complete! {selectedWeek < 8 ? (
+          🎉 Week {selectedWeek} complete! {selectedWeek < maxWeeks ? (
             <button onClick={() => { setSelectedWeek(selectedWeek + 1); setCompletedTasks(new Set()); }}>
               Start Week {selectedWeek + 1} →
             </button>
           ) : (
-            <span>You're ready for mock interviews!</span>
+            <span>{isSixMonth ? 'You completed the full 6-month course!' : "You're ready for mock interviews!"}</span>
           )}
         </div>
       )}

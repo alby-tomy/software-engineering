@@ -582,16 +582,109 @@ export const cloud = createModule({
 
 export const aiEngineering = createModule({
   id: 'ai-engineering',
-  title: 'AI-Assisted Engineering',
-  stage: 10,
-  level: 'intermediate',
-  icon: '🤖',
-  description: 'LLMs, RAG, vector databases, agents, and responsible AI-assisted development.',
-  estimatedHours: 15,
-  learningObjectives: ['Understand LLM APIs, embeddings, and RAG architecture', 'Evaluate AI-generated code for security and quality', 'Build processes for responsible AI-assisted development'],
+  title: 'AI in Production & Responsible Engineering',
+  stage: 11,
+  level: 'senior',
+  icon: '🛡️',
+  description: 'Deploy, monitor, and govern AI systems in production. Evals, cost control, security, and responsible AI-assisted development.',
+  prerequisites: ['generative-ai', 'rag-embeddings', 'agentic-ai'],
+  estimatedHours: 12,
+  learningObjectives: [
+    'Deploy LLM applications with monitoring, caching, and fallbacks',
+    'Run evaluation suites and A/B tests on AI features',
+    'Implement responsible AI practices for team-wide AI tool adoption',
+    'Design cost and latency budgets for AI-powered features',
+  ],
   sections: [
-    { id: 'fundamentals', title: 'LLM Fundamentals', content: `LLM APIs: prompt → completion. Embeddings: text → vector for similarity search. RAG: retrieve relevant docs + generate answer. Vector databases: Pinecone, Weaviate, pgvector. Agents: LLM + tools + planning loop.` },
-    { id: 'responsible', title: 'Responsible AI Development', content: `Review all AI-generated code. Security scan (SAST). Test coverage requirements. No secrets in prompts. Evaluate output quality. Human review for critical paths. Document AI-assisted vs human-written.` },
+    {
+      id: 'production',
+      title: 'Deploying AI Applications',
+      content: `### Production architecture for LLM apps
+\`\`\`
+Client → API Gateway (rate limit) → AI Service
+                                        ├→ LLM Provider (OpenAI/Anthropic)
+                                        ├→ Vector DB (RAG)
+                                        ├→ Cache (Redis — prompt/response)
+                                        └→ Observability (LangSmith/Langfuse)
+\`\`\`
+
+### Reliability patterns
+- **Fallback models**: GPT-4 fails → try GPT-4o-mini → cached response → graceful error
+- **Streaming**: SSE for perceived low latency on long responses
+- **Queue async tasks**: Heavy AI work (summarize 100 pages) → background job + webhook
+- **Circuit breaker**: LLM provider down → stop calling, alert, degrade feature
+
+### Caching strategies
+- **Exact match cache**: Same question → same answer (Redis, TTL 1h)
+- **Semantic cache**: Similar questions → cached answer (embed query, compare)
+- **Prompt caching**: Provider-side cache for repeated system prompts (90% cost cut)
+
+### Monitoring
+- Token usage per user/feature/request
+- Latency p50/p95/p99 per model
+- Error rate and fallback frequency
+- User feedback (thumbs up/down)
+- Hallucination reports`,
+    },
+    {
+      id: 'evals',
+      title: 'Evaluation & Testing AI Systems',
+      content: `### Why evals matter
+LLMs are non-deterministic. You can't unit test "the answer is X." You need **evaluation datasets** and **automated scoring**.
+
+### Eval types
+| Type | Method | Example |
+|------|--------|---------|
+| Retrieval eval | Did we find right docs? | Precision@5 on test queries |
+| Generation eval | Is answer correct? | LLM-as-judge vs golden answer |
+| Safety eval | Harmful output? | Adversarial prompt suite |
+| Regression eval | Did update break things? | Run full suite on every deploy |
+
+### CI/CD for AI
+\`\`\`yaml
+# On every PR:
+- run_eval_suite: 200 test cases, fail if score < 0.85
+- cost_check: estimate token cost of changes
+- latency_check: p95 < 3s on benchmark queries
+\`\`\`
+
+### A/B testing AI features
+- Control: old prompt/model
+- Treatment: new prompt/model
+- Measure: task completion rate, user satisfaction, cost, latency`,
+    },
+    {
+      id: 'responsible',
+      title: 'Responsible AI Development',
+      content: `### Team AI assistant governance
+1. **Mandatory human review** for all AI-generated code in PRs
+2. **SAST/DAST** in CI — AI code has same security bar
+3. **No secrets in prompts** — scan prompts for API keys, PII
+4. **Test coverage** requirements unchanged
+5. **Document** what's AI-assisted vs human-written
+6. **Training** on secure prompting practices
+
+### Security risks unique to AI
+- **Prompt injection**: User input manipulates system prompt
+- **Data leakage**: Model trained on or exposed to private data
+- **Tool abuse**: Agent tricked into calling dangerous tools
+- **Jailbreaking**: Bypassing safety guardrails
+
+### Mitigations
+\`\`\`python
+# Input sanitization
+def sanitize_user_input(text: str) -> str:
+    # Strip system prompt injection attempts
+    blocked = ["ignore previous", "you are now", "system:"]
+    for phrase in blocked:
+        if phrase.lower() in text.lower():
+            raise ValueError("Invalid input")
+    return text[:2000]  # Length limit
+\`\`\`
+
+### Interview answer
+"We treat AI as a junior developer: fast output, always reviewed, never deployed without tests, never given production credentials without guardrails."`,
+    },
   ],
   questions: [
     { id: 'ai-q1', level: 'senior', question: 'Team uses AI coding assistant. How do you ensure generated code is secure and maintainable?', answer: 'Mandatory code review (human). Automated security scanning (SAST/DAST). Test coverage requirements. Linting and type checking in CI. No direct commit of AI code without review. Training on prompting for secure code. Track AI-generated code ratio. Regular audits.' },

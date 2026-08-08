@@ -11,6 +11,7 @@ import { DailyPlan } from './pages/DailyPlan';
 import { SystemDesignPractice } from './pages/SystemDesignPractice';
 import { Quiz } from './pages/Quiz';
 import { VideoLibrary } from './pages/VideoLibrary';
+import { SixMonthCourse } from './pages/SixMonthCourse';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path="/mock-interview" element={<MockInterview />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/daily-plan" element={<DailyPlan />} />
+          <Route path="/course" element={<SixMonthCourse />} />
           <Route path="/system-design-practice" element={<SystemDesignPractice />} />
           <Route path="/system-design-practice/:problemId" element={<SystemDesignPractice />} />
           <Route path="/quiz/:moduleId" element={<Quiz />} />

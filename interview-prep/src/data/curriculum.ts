@@ -67,9 +67,16 @@ export const stages: Stage[] = [
   {
     id: 10,
     title: 'Senior Engineering',
-    description: 'Behavioral interviews, AI-assisted engineering, and staff-level thinking.',
+    description: 'Behavioral interviews, staff-level thinking, and career preparation.',
     targetLevel: 'Staff / Principal',
-    moduleIds: ['behavioral', 'ai-engineering', 'senior-engineering'],
+    moduleIds: ['behavioral', 'senior-engineering'],
+  },
+  {
+    id: 11,
+    title: 'AI Engineering',
+    description: 'Generative AI, RAG, agentic systems, and production AI deployment.',
+    targetLevel: 'AI Engineer / Senior Backend',
+    moduleIds: ['generative-ai', 'rag-embeddings', 'agentic-ai', 'ai-engineering'],
   },
 ];
 
@@ -108,6 +115,9 @@ export const learningPathOrder = [
   'elasticsearch',
   'event-driven',
   'behavioral',
+  'generative-ai',
+  'rag-embeddings',
+  'agentic-ai',
   'ai-engineering',
   'senior-engineering',
 ];
