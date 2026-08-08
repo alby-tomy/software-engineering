@@ -6,24 +6,27 @@ PulseGrid is the hands-on capstone for the 6-month software engineering course. 
 
 ## Problem
 
-During outages, teams drown in duplicate alerts, chase downstream symptoms instead of root causes, and waste minutes finding runbooks. PulseGrid ingests alerts, deduplicates them, correlates service dependencies, and exposes a production API for on-call engineers.
+During outages, teams drown in duplicate alerts, chase downstream symptoms instead of root causes, and waste minutes finding runbooks. PulseGrid ingests alerts, deduplicates them, correlates service dependencies, pages on-call engineers, and uses AI to summarize incidents and suggest runbooks.
 
-## Architecture (Weeks 1–9)
+## Full Architecture (24 Weeks)
 
 ```
-[Prometheus/Datadog] ──webhook──▶ [FastAPI /webhooks/alerts]
-                                        │
-                                        ▼ (202 Accepted)
-                                  [Priority Queue]
-                                        │
-                                        ▼
-                              [Worker Pool + Dedup]
-                                        │
-                    ┌───────────────────┼───────────────────┐
-                    ▼                   ▼                   ▼
-              [PostgreSQL]          [Redis]           [Service Graph]
-              incidents,            cache +           BFS root-cause
-              alerts, users           dedup window      correlation
+[Monitoring] ──webhook──▶ [FastAPI API] ──▶ [Priority Queue] ──▶ [Worker Pool]
+                                │                                      │
+                    REST /v1 / GraphQL / WS                           ▼
+                                │                              [Incident Processor]
+                    ┌───────────┼───────────┐                          │
+                    ▼           ▼           ▼                          ▼
+              [PostgreSQL]  [Redis]   [Kafka/Events]          [Notifications]
+                    │                       │                   Slack/PagerDuty
+                    ▼                       ▼
+              [Timeline]            [Search Index]
+                    │
+                    ▼
+         [AI: Summarize / RAG / Agent]
+                    │
+                    ▼
+         [React Dashboard] + [Next.js Status Page]
 ```
 
 ## Quick Start
@@ -31,90 +34,87 @@ During outages, teams drown in duplicate alerts, chase downstream symptoms inste
 ### Prerequisites
 
 - Python 3.12+
-- Docker & Docker Compose
+- Docker & Docker Compose (optional)
+- Node.js 18+ (for dashboards)
 
-### 1. Start infrastructure
+### 1. Start full stack
 
 ```bash
-docker compose up -d
+docker compose up -d   # postgres, redis, redpanda, api, worker
 ```
 
-This starts PostgreSQL (5432) and Redis (6379).
-
-### 2. Install dependencies
+Or run locally:
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate
+python -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"
-```
-
-### 3. Run migrations
-
-```bash
-alembic upgrade head
-```
-
-### 4. Start API + worker
-
-```bash
-# Terminal 1 — API server
 uvicorn pulsegrid.api.main:app --reload --port 8000
-
-# Terminal 2 — background alert processor
-python -m pulsegrid.worker.runner
+python -m pulsegrid.worker.runner   # separate terminal
 ```
 
-### 5. Send a test alert
-
-```bash
-curl -X POST http://localhost:8000/webhooks/alerts \
-  -H "Content-Type: application/json" \
-  -d '{
-    "service_id": "payment-api",
-    "title": "High error rate",
-    "severity": "p1",
-    "source": "custom"
-  }'
-```
-
-### 6. List incidents (login first)
-
-```bash
-# Get token
-TOKEN=$(curl -s -X POST http://localhost:8000/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"username":"admin","password":"admin"}' | python -c "import sys,json; print(json.load(sys.stdin)['access_token'])")
-
-curl -H "Authorization: Bearer $TOKEN" http://localhost:8000/incidents
-```
-
-## Project Structure
-
-| Path | Week | Purpose |
-|------|------|---------|
-| `docs/adr/001-monolith-first.md` | 1 | Architecture decision record |
-| `docs/domain-model.md` | 1 | Entity relationships |
-| `pulsegrid/models/` | 2 | Pydantic domain models |
-| `pulsegrid/core/queue.py` | 3 | Async alert ingestion |
-| `pulsegrid/core/worker_pool.py` | 4 | Worker pool + dedup |
-| `pulsegrid/core/priority_queue.py` | 5 | P1-first processing |
-| `pulsegrid/services/service_graph.py` | 6 | Dependency graph + BFS |
-| `pulsegrid/db/` | 7 | PostgreSQL schema + Alembic |
-| `pulsegrid/cache/` | 8 | Redis cache-aside |
-| `pulsegrid/api/` | 9 | FastAPI production API |
-
-## Running Tests
+### 2. Run tests (51 tests)
 
 ```bash
 pytest -v
-mypy pulsegrid
-ruff check pulsegrid tests
+python scripts/eval_rag.py   # RAG recall@3 gate
 ```
 
-## Course Integration
+### 3. React dashboard (Week 11)
 
-Each weekly step in the learning platform (`/capstone`) maps to real files in this repo. Complete the textbook lesson, then implement or verify the corresponding code path.
+```bash
+cd dashboard && npm install && npm run dev
+# http://localhost:5173
+```
+
+### 4. Next.js status page (Week 12)
+
+```bash
+cd dashboard-next && npm install && npm run dev
+# http://localhost:3000/status/default
+```
+
+## Weekly Code Map
+
+| Weeks | Feature | Key Paths |
+|-------|---------|-----------|
+| 1–2 | Architecture + models | `docs/`, `pulsegrid/models/` |
+| 3–5 | Async ingestion + DSA | `pulsegrid/core/` |
+| 6 | Service graph | `pulsegrid/services/service_graph.py` |
+| 7–8 | PostgreSQL + Redis | `pulsegrid/db/`, `pulsegrid/cache/` |
+| 9 | FastAPI API | `pulsegrid/api/` |
+| 10 | REST v1, GraphQL, gRPC | `api/routers/v1.py`, `api/graphql/`, `services/notification/` |
+| 11 | React dashboard | `dashboard/` |
+| 12 | Next.js SSR + status page | `dashboard-next/` |
+| 13 | Git workflow | `.github/`, `docs/contributing.md` |
+| 14 | Docker + CI/CD | `infra/docker/`, `.github/workflows/` |
+| 15 | Terraform (AWS) | `infra/terraform/` |
+| 16 | Kubernetes + security | `infra/k8s/`, `api/middleware/` |
+| 17 | Scale + circuit breaker | `core/circuit_breaker.py`, `scripts/load_test.py` |
+| 18 | Timeline + postmortem | `api/routers/timeline.py`, `api/routers/postmortem.py` |
+| 19 | Kafka + outbox | `core/outbox.py`, `services/event_bus.py` |
+| 20 | Performance | `scripts/load_test.py` |
+| 21 | AI summarization | `services/ai/summarizer.py` |
+| 22 | RAG runbooks | `services/ai/rag.py`, `docs/runbooks/` |
+| 23 | AI agent | `services/ai/agent.py` |
+| 24 | Production launch | `docs/demo-script.md`, `docs/architecture.md` |
+
+## API Highlights
+
+| Endpoint | Description |
+|----------|-------------|
+| `POST /webhooks/alerts` | Async ingestion (202) |
+| `GET /v1/incidents?cursor=&limit=` | Cursor pagination |
+| `POST /graphql` | GraphQL playground |
+| `GET /status/{team}` | Public status page data |
+| `GET /incidents/{id}/timeline` | Event timeline |
+| `POST /ai/incidents/{id}/summarize` | AI summary |
+| `GET /ai/incidents/{id}/runbooks` | RAG runbook suggestions |
+| `POST /ai/agent` | Incident response agent |
+| `WS /ws/incidents` | Real-time updates |
+
+## Demo
+
+See `docs/demo-script.md` for the 5-minute capstone presentation flow.
 
 ## License
 

@@ -1,8 +1,7 @@
-"""FastAPI production application (Week 9)."""
+"""FastAPI production application (Weeks 9–24)."""
 
 from __future__ import annotations
 
-import logging
 import time
 import uuid
 from contextlib import asynccontextmanager
@@ -13,7 +12,10 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from pulsegrid.api.routers import auth, incidents, services, webhooks
+from pulsegrid.api.graphql.schema import create_graphql_router
+from pulsegrid.api.middleware.rate_limit import RateLimitMiddleware
+from pulsegrid.api.middleware.security import SecurityHeadersMiddleware
+from pulsegrid.api.routers import ai, auth, incidents, postmortem, services, status, timeline, v1, webhooks, ws
 from pulsegrid.api.state import AppState, app_state
 from pulsegrid.config import settings
 
@@ -34,7 +36,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     )
     state.init_processor()
     app.state.pulsegrid = state
-    logger.info("pulsegrid_started", worker_count=settings.worker_count)
+    logger.info("pulsegrid_started", version="0.2.0", worker_count=settings.worker_count)
     yield
     logger.info("pulsegrid_stopped")
 
@@ -43,13 +45,15 @@ def create_app() -> FastAPI:
     app = FastAPI(
         title="PulseGrid API",
         description="AI-powered incident response platform",
-        version="0.1.0",
+        version="0.2.0",
         lifespan=lifespan,
     )
 
+    app.add_middleware(SecurityHeadersMiddleware)
+    app.add_middleware(RateLimitMiddleware)
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["*"],
+        allow_origins=settings.cors_origin_list,
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
@@ -76,11 +80,18 @@ def create_app() -> FastAPI:
     app.include_router(auth.router)
     app.include_router(webhooks.router)
     app.include_router(incidents.router)
+    app.include_router(v1.router)
     app.include_router(services.router)
+    app.include_router(timeline.router)
+    app.include_router(status.router)
+    app.include_router(ai.router)
+    app.include_router(postmortem.router)
+    app.include_router(ws.router)
+    app.include_router(create_graphql_router(), prefix="/graphql")
 
     @app.get("/health")
     async def health() -> dict[str, str]:
-        return {"status": "ok"}
+        return {"status": "ok", "version": "0.2.0"}
 
     @app.get("/ready")
     async def ready() -> JSONResponse:
@@ -94,13 +105,9 @@ def create_app() -> FastAPI:
             checks["redis"] = "ok"
         except Exception as exc:
             checks["redis"] = f"error: {exc}"
-        # DB optional for in-memory mode
         if all(v == "ok" for v in checks.values()):
             return JSONResponse({"status": "ready", "checks": checks})
-        return JSONResponse(
-            {"status": "not_ready", "checks": checks},
-            status_code=503,
-        )
+        return JSONResponse({"status": "not_ready", "checks": checks}, status_code=503)
 
     return app
 

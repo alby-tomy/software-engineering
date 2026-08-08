@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pulsegrid-worker
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: pulsegrid-worker
+  template:
+    metadata:
+      labels:
+        app: pulsegrid-worker
+    spec:
+      containers:
+        - name: worker
+          image: pulsegrid-worker:latest
+          envFrom:
+            - configMapRef:
+                name: pulsegrid-config
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi

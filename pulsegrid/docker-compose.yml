@@ -27,5 +27,43 @@ services:
       timeout: 3s
       retries: 5
 
+  redpanda:
+    image: redpandadata/redpanda:v24.2.4
+    command:
+      - redpanda start
+      - --smp 1
+      - --memory 512M
+      - --overprovisioned
+      - --kafka-addr internal://0.0.0.0:9092,external://0.0.0.0:19092
+      - --advertise-kafka-addr internal://redpanda:9092,external://localhost:19092
+    ports:
+      - "19092:19092"
+
+  api:
+    build:
+      context: ..
+      dockerfile: infra/docker/Dockerfile.api
+    ports:
+      - "8000:8000"
+    environment:
+      PULSEGRID_DATABASE_URL: postgresql+asyncpg://pulsegrid:pulsegrid@postgres:5432/pulsegrid
+      PULSEGRID_REDIS_URL: redis://redis:6379/0
+      PULSEGRID_KAFKA_BOOTSTRAP: redpanda:9092
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  worker:
+    build:
+      context: ..
+      dockerfile: infra/docker/Dockerfile.worker
+    environment:
+      PULSEGRID_DATABASE_URL: postgresql+asyncpg://pulsegrid:pulsegrid@postgres:5432/pulsegrid
+      PULSEGRID_REDIS_URL: redis://redis:6379/0
+    depends_on:
+      - api
+
 volumes:
   pgdata:

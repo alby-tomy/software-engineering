@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pulsegrid-config
+data:
+  PULSEGRID_CORS_ORIGINS: "https://pulsegrid.example.com"
+  PULSEGRID_RATE_LIMIT_PER_MINUTE: "120"
+  PULSEGRID_QUEUE_MAXSIZE: "1000"
+  PULSEGRID_WORKER_COUNT: "4"

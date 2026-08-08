@@ -46,10 +46,9 @@ async def acknowledge_incident(
     if incident is None:
         raise HTTPException(status_code=404, detail="Incident not found")
     try:
-        incident.acknowledge()
+        return await processor.acknowledge_incident(incident_id)
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
-    return incident
 
 
 @router.post("/incidents/{incident_id}/resolve")
@@ -62,7 +61,6 @@ async def resolve_incident(
     if incident is None:
         raise HTTPException(status_code=404, detail="Incident not found")
     try:
-        incident.resolve()
+        return await processor.resolve_incident(incident_id)
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
-    return incident
