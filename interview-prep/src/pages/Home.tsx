@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom';
 import { stages } from '../data/curriculum';
 import { allModules } from '../data/modules';
 import { learningPaths } from '../data/learning-paths';
+import { videoLessons } from '../data/concept-videos';
+import { detailedConcepts } from '../data/detailed-concepts';
 import { useProgress } from '../hooks/useProgress';
 import './Home.css';
 
@@ -31,6 +33,10 @@ export function Home() {
           <div className="stat">
             <span className="stat-value">{totalQuestions}</span>
             <span className="stat-label">Questions</span>
+          </div>
+          <div className="stat">
+            <span className="stat-value">{videoLessons.length}</span>
+            <span className="stat-label">Videos</span>
           </div>
           <div className="stat">
             <span className="stat-value">{progress}%</span>
@@ -71,6 +77,11 @@ export function Home() {
             <span className="practice-icon">🎤</span>
             <h3>Mock Interview</h3>
             <p>Timed senior-level practice sessions. Answer out loud, take notes, compare with model answers.</p>
+          </Link>
+          <Link to="/videos" className="practice-card">
+            <span className="practice-icon">🎬</span>
+            <h3>Video Library</h3>
+            <p>{videoLessons.length} curated lessons and {detailedConcepts.length} deep-dive concepts with embedded YouTube videos.</p>
           </Link>
         </div>
       </section>
@@ -137,6 +148,11 @@ export function Home() {
             <span className="how-to-icon">🎤</span>
             <h3>Mock Interview</h3>
             <p>Use senior scenarios for timed practice sessions.</p>
+          </div>
+          <div className="how-to-card">
+            <span className="how-to-icon">🎬</span>
+            <h3>Watch & Learn</h3>
+            <p>Study concept-by-concept with curated videos and detailed explanations.</p>
           </div>
         </div>
       </section>

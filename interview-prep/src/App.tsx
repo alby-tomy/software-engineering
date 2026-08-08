@@ -10,6 +10,7 @@ import { Dashboard } from './pages/Dashboard';
 import { DailyPlan } from './pages/DailyPlan';
 import { SystemDesignPractice } from './pages/SystemDesignPractice';
 import { Quiz } from './pages/Quiz';
+import { VideoLibrary } from './pages/VideoLibrary';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/system-design-practice" element={<SystemDesignPractice />} />
           <Route path="/system-design-practice/:problemId" element={<SystemDesignPractice />} />
           <Route path="/quiz/:moduleId" element={<Quiz />} />
+          <Route path="/videos" element={<VideoLibrary />} />
         </Route>
       </Routes>
     </BrowserRouter>

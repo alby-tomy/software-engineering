@@ -2,13 +2,16 @@ import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getModule } from '../data/modules';
 import { getModuleQuiz } from '../data/practice';
+import { getVideosByModule } from '../data/concept-videos';
+import { getConceptsByModule } from '../data/detailed-concepts';
 import { useProgress } from '../hooks/useProgress';
 import { MarkdownContent } from '../components/MarkdownContent';
 import { CodeBlock } from '../components/CodeBlock';
 import { QuestionCard } from '../components/QuestionCard';
+import { ConceptVideoCard } from '../components/ConceptVideoCard';
 import './ModulePage.css';
 
-type Tab = 'learn' | 'questions' | 'scenarios' | 'resources' | 'quiz';
+type Tab = 'learn' | 'questions' | 'scenarios' | 'resources' | 'videos' | 'quiz';
 
 export function ModulePage() {
   const { moduleId } = useParams<{ moduleId: string }>();
@@ -29,6 +32,9 @@ export function ModulePage() {
   const progress = getModuleProgress(module.id, module.sections.length);
   const section = module.sections[activeSection];
   const hasQuiz = getModuleQuiz(module.id).length > 0;
+  const moduleVideos = getVideosByModule(module.id);
+  const moduleConcepts = getConceptsByModule(module.id);
+  const hasVideos = moduleVideos.length > 0 || moduleConcepts.length > 0;
 
   return (
     <div className="module-page">
@@ -74,6 +80,14 @@ export function ModulePage() {
             {tab === 'resources' && `📚 Resources (${module.resources.length})`}
           </button>
         ))}
+        {hasVideos && (
+          <button
+            className={`tab-btn ${activeTab === 'videos' ? 'active' : ''}`}
+            onClick={() => setActiveTab('videos')}
+          >
+            🎬 Videos ({moduleVideos.length})
+          </button>
+        )}
         {hasQuiz && (
           <Link to={`/quiz/${module.id}`} className="tab-btn quiz-tab">
             🧪 Take Quiz
@@ -187,6 +201,66 @@ export function ModulePage() {
               <span className="resource-arrow">→</span>
             </a>
           ))}
+        </div>
+      )}
+
+      {activeTab === 'videos' && (
+        <div className="module-videos">
+          {moduleConcepts.length > 0 && (
+            <section className="module-concepts-section">
+              <h2>📖 Deep-Dive Concepts</h2>
+              <p className="videos-intro">
+                Detailed explanations with analogies, real-world examples, and interview tips.
+              </p>
+              {moduleConcepts.map((concept) => (
+                <article key={concept.id} className="module-concept-card">
+                  <h3>{concept.title}</h3>
+                  <p className="concept-summary">{concept.summary}</p>
+                  {concept.analogy && (
+                    <div className="concept-callout analogy">
+                      <strong>💭 Analogy:</strong> {concept.analogy}
+                    </div>
+                  )}
+                  <MarkdownContent content={concept.content} />
+                  {concept.realWorldExample && (
+                    <div className="concept-callout real-world">
+                      <strong>🌍 Real-World:</strong> {concept.realWorldExample}
+                    </div>
+                  )}
+                  {concept.interviewTips && concept.interviewTips.length > 0 && (
+                    <div className="concept-callout tips">
+                      <strong>🎯 Interview Tips:</strong>
+                      <ul>
+                        {concept.interviewTips.map((tip, i) => (
+                          <li key={i}>{tip}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </article>
+              ))}
+            </section>
+          )}
+
+          {moduleVideos.length > 0 && (
+            <section className="module-videos-section">
+              <h2>🎬 Video Lessons</h2>
+              <p className="videos-intro">
+                Watch concept-by-concept videos with embedded players and key takeaways.
+              </p>
+              {moduleVideos.map((video) => (
+                <ConceptVideoCard key={video.id} video={video} />
+              ))}
+            </section>
+          )}
+
+          {moduleVideos.length === 0 && moduleConcepts.length === 0 && (
+            <p className="empty-state">No video lessons for this module yet. Check the Video Library for other topics.</p>
+          )}
+
+          <Link to="/videos" className="all-videos-link">
+            Browse full Video Library →
+          </Link>
         </div>
       )}
     </div>

@@ -38,6 +38,9 @@ export function Sidebar({ currentModuleId, onClose, isOpen }: SidebarProps) {
         <Link to="/flashcards" className="nav-item" onClick={onClose}>
           🃏 Flashcards
         </Link>
+        <Link to="/videos" className="nav-item" onClick={onClose}>
+          🎬 Video Library
+        </Link>
         <Link to="/mock-interview" className="nav-item" onClick={onClose}>
           🎤 Mock Interview
         </Link>

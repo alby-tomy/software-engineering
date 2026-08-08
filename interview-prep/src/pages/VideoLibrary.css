@@ -1,0 +1,222 @@
+.video-library {
+  max-width: 900px;
+}
+
+.video-library-header {
+  margin-bottom: 2rem;
+}
+
+.video-library-header h1 {
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.video-library-intro {
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.video-library-controls {
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.video-search {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: 1rem;
+}
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.filter-row select {
+  flex: 1;
+  min-width: 140px;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.view-toggle {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.view-toggle button {
+  flex: 1;
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.view-toggle button.active {
+  background: var(--accent-bg);
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.concept-group {
+  margin-bottom: 3rem;
+}
+
+.concept-group-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.35rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--border);
+}
+
+.concept-group-icon {
+  font-size: 1.5rem;
+}
+
+.concept-group-count {
+  font-size: 0.8rem;
+  font-weight: normal;
+  color: var(--text-muted);
+  margin-left: auto;
+}
+
+.detailed-concept-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+
+.concept-card-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1.25rem 1.5rem;
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  text-align: left;
+}
+
+.concept-card-header h3 {
+  font-size: 1.1rem;
+  margin: 0.35rem 0;
+}
+
+.concept-card-header p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.concept-module-tag {
+  font-size: 0.75rem;
+  color: var(--accent);
+}
+
+.expand-icon {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+.concept-card-body {
+  padding: 0 1.5rem 1.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.concept-highlight {
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+  line-height: 1.6;
+}
+
+.concept-highlight strong {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.concept-highlight.analogy {
+  background: #8b5cf622;
+  border-left: 3px solid #8b5cf6;
+}
+
+.concept-highlight.real-world {
+  background: #22c55e22;
+  border-left: 3px solid #22c55e;
+}
+
+.concept-highlight.mistakes {
+  background: #ef444422;
+  border-left: 3px solid #ef4444;
+}
+
+.concept-highlight.tips {
+  background: #f59e0b22;
+  border-left: 3px solid #f59e0b;
+}
+
+.concept-highlight ul {
+  padding-left: 1.25rem;
+  margin: 0;
+}
+
+.related-videos {
+  margin-top: 1.5rem;
+}
+
+.related-video-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.related-video-link {
+  font-size: 0.85rem;
+  padding: 0.35rem 0.75rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.module-link {
+  display: inline-block;
+  margin-top: 1.5rem;
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.module-link:hover {
+  text-decoration: underline;
+}
+
+.empty-state {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 3rem 1rem;
+}
