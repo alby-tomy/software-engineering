@@ -1,0 +1,44 @@
+.code-example {
+  margin: 1rem 0;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.code-example-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: var(--bg-code-header);
+  border-bottom: 1px solid var(--border);
+}
+
+.code-example-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.code-example-lang {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.code-example-body {
+  padding: 1rem;
+  margin: 0;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  background: var(--bg-code);
+}
+
+.code-example-explanation {
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border);
+  margin: 0;
+  font-style: italic;
+}
