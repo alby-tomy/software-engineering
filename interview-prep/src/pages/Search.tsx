@@ -28,7 +28,7 @@ export function Search() {
         <div className="search-suggestions">
           <p>Try searching for:</p>
           <div className="suggestion-tags">
-            {['async', 'GIL', 'B-tree index', 'circuit breaker', 'MVCC', 'goroutine', 'React hooks', 'CAP theorem', 'JWT', 'pagination'].map((tag) => (
+            {['async', 'GIL', 'B-tree index', 'circuit breaker', 'MVCC', 'goroutine', 'Kafka', 'microservices', 'system design', 'JWT', 'CAP theorem', 'event sourcing', 'gRPC'].map((tag) => (
               <button key={tag} className="suggestion-tag" onClick={() => setQuery(tag)}>
                 {tag}
               </button>

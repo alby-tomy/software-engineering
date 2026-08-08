@@ -51,11 +51,46 @@ Lock key during rebuild. Or probabilistic early expiration.
 ### Eviction policies
 allkeys-lru, volatile-lru, noeviction (returns error when full).`,
     },
+    {
+      id: 'sharding',
+      title: 'Sharding & Partitioning',
+      content: `### Partitioning (single DB)
+Split large table into smaller pieces within same DB. Range, list, or hash partitioning.
+
+### Sharding (multiple DBs)
+Horizontal scaling across database servers. Shard key determines which DB.
+
+### Sharding strategies
+- **Hash-based**: even distribution, hard to range query
+- **Range-based**: easy range queries, hot spots possible
+- **Directory-based**: lookup table, flexible but SPOF
+
+### Challenges
+Cross-shard joins, transactions, rebalancing. Use application-level joins or denormalization.`,
+    },
+    {
+      id: 'nosql',
+      title: 'NoSQL — When & Why',
+      content: `### SQL vs NoSQL decision matrix
+| Need | Choose |
+|------|--------|
+| ACID transactions | PostgreSQL |
+| Flexible schema | MongoDB |
+| Key-value cache | Redis |
+| Full-text search | Elasticsearch |
+| Time-series | TimescaleDB, InfluxDB |
+| Wide-column scale | Cassandra, DynamoDB |
+
+### CAP in practice
+Most systems choose AP (availability + partition tolerance) with eventual consistency. Use strong consistency only when business requires it (payments, inventory).`,
+    },
   ],
   questions: [
     { id: 'db-q1', level: 'understanding', question: 'What is MVCC?', answer: 'Multi-Version Concurrency Control allows multiple transactions to access data concurrently without locking. Each transaction sees a snapshot of data as of its start time.' },
     { id: 'db-q2', level: 'application', question: 'When should you use Redis?', answer: 'Caching, session storage, rate limiting, pub/sub, leaderboards, distributed locks. NOT as primary data store for critical data without persistence strategy.' },
     { id: 'db-q3', level: 'senior', question: 'Your Redis cluster is unavailable. What happens to your application?', answer: 'Depends on design. Cache-aside: degraded performance (DB load increases), not data loss. Session store: users logged out. Rate limiter: either fail open (allow all) or fail closed (reject all). Circuit breaker should detect and fallback gracefully.' },
+    { id: 'db-q4', level: 'architecture', question: 'How do you implement read/write splitting?', answer: 'Write to primary PostgreSQL. Reads from read replicas. Application routes queries by type. Watch replication lag — stale reads possible. Use primary for read-after-write consistency.' },
+    { id: 'db-q5', level: 'senior', question: 'When would you shard a database?', answer: 'When single DB cannot handle write throughput or storage. Shard by user_id or tenant_id. Challenges: cross-shard queries, rebalancing, distributed transactions. Consider partitioning first, then sharding.' },
   ],
   seniorScenarios: [{ title: 'Cache stampede', scenario: 'Popular item cache expires. 10,000 requests hit DB simultaneously.', approach: 'Mutex lock during rebuild. Probabilistic early refresh. Request coalescing — only one request rebuilds, others wait.', keyConsiderations: ['Lock timeout', 'Stale data tolerance', 'DB protection'] }],
   resources: [{ title: 'PostgreSQL Documentation', url: 'https://www.postgresql.org/docs/', type: 'documentation' }],
@@ -74,11 +109,46 @@ export const go = createModule({
   sections: [
     { id: 'concurrency', title: 'Goroutines & Channels', content: `Goroutines are lightweight (~2KB stack). Channels communicate between goroutines. Buffered channels decouple sender/receiver. Use \`select\` for multiplexing. Prefer "share memory by communicating" over "communicate by sharing memory".` },
     { id: 'context', title: 'Context & Cancellation', content: `\`context.Context\` carries deadlines, cancellation signals, and request-scoped values. Always accept context as first parameter. Propagate cancellation through call chain.` },
+    { id: 'interfaces', title: 'Interfaces & Error Handling', content: `### Interfaces
+Implicit satisfaction — no \`implements\` keyword. Small interfaces (io.Reader, io.Writer). Accept interfaces, return structs.
+
+### Error handling
+Errors are values, not exceptions. Always check \`if err != nil\`. Wrap with \`fmt.Errorf("context: %w", err)\`. Custom error types for specific handling.
+
+### defer, panic, recover
+\`defer\` runs on function exit (LIFO). \`panic\` for unrecoverable errors. \`recover\` in defer catches panic. Don't use panic for normal error flow.` },
+    { id: 'memory-gc', title: 'Memory Model & GC', content: `### Escape analysis
+Compiler decides stack vs heap allocation. Passing pointer to goroutine → escapes to heap.
+
+### Garbage collection
+Concurrent, tri-color mark-and-sweep. GOGC env var controls frequency (default 100). Tuning for low-latency services.
+
+### Profiling
+\`go tool pprof\` for CPU and memory. \`-race\` flag for race detector. \`net/http/pprof\` for live profiling.` },
+    { id: 'worker-pools', title: 'Worker Pools & Patterns', content: `### Worker pool
+\`\`\`go
+jobs := make(chan Job, 100)
+for w := 0; w < numWorkers; w++ {
+    go func() {
+        for job := range jobs {
+            process(job)
+        }
+    }()
+}
+\`\`\`
+
+### Rate limiting
+\`golang.org/x/time/rate\` — token bucket limiter.
+
+### Graceful shutdown
+Listen for SIGTERM/SIGINT. context.WithCancel. WaitGroup for in-flight requests. Shutdown HTTP server with timeout.` },
   ],
   questions: [
     { id: 'go-q1', level: 'understanding', question: 'Goroutine vs OS thread?', answer: 'Goroutines are user-space threads managed by Go runtime (~2KB stack, cheap to create). OS threads are kernel-managed (~8MB stack, expensive). Go multiplexes goroutines onto OS threads (M:N scheduling).' },
     { id: 'go-q2', level: 'tradeoffs', question: 'Mutex vs channel?', answer: 'Channels for communication/ownership transfer. Mutexes for protecting shared state. Rule: use channels to orchestrate goroutines, mutexes to protect shared data structures.' },
     { id: 'go-q3', level: 'senior', question: 'How do you prevent goroutine leaks?', answer: 'Always ensure goroutines can exit: use context cancellation, buffered channels to prevent blocking sends, WaitGroup for tracking, monitor goroutine count in production.' },
+    { id: 'go-q4', level: 'application', question: 'How do you implement a worker pool in Go?', answer: 'Fixed number of goroutines reading from a buffered channel. Main goroutine sends jobs. Use sync.WaitGroup to wait for completion. context.Context for cancellation. Close channel to signal workers to exit.' },
+    { id: 'go-q5', level: 'optimization', question: 'How would you optimize a high-throughput Go service?', answer: 'Connection pooling. sync.Pool for object reuse. Avoid allocations in hot path. Profile with pprof. Tune GOGC. Use buffered channels. Batch operations. Consider sharding for stateful services.' },
   ],
   seniorScenarios: [{ title: 'High-throughput Go service', scenario: 'Design a Go service handling 50k RPS.', approach: 'HTTP server with connection pooling. Worker pool with bounded channels. context.WithTimeout per request. pprof endpoints. Graceful shutdown with signal handling.', keyConsiderations: ['Goroutine count', 'Channel buffer sizes', 'GC tuning'] }],
   resources: [{ title: 'Go Tour', url: 'https://go.dev/tour/', type: 'documentation' }],
@@ -120,11 +190,26 @@ export const react = createModule({
     { id: 'hooks', title: 'Hooks Deep Dive', content: `useState: local state. useEffect: side effects (fetch, subscriptions). useMemo/useCallback: memoization (don't overuse). useRef: mutable values without re-render. Custom hooks: extract reusable logic.` },
     { id: 'state', title: 'State Management', content: `Local state → lifted state → Context (low-frequency updates) → Global store (Redux/Zustand) → Server state (React Query/TanStack Query). Signal for refactor: prop drilling > 3 levels, unrelated components sharing state, frequent updates causing wide re-renders.` },
     { id: 'performance', title: 'Performance', content: `React re-renders when state/props change or parent re-renders. React.memo for expensive pure components. Virtualization for long lists (react-window). Code splitting with React.lazy. Avoid inline objects/functions in JSX props.` },
+    { id: 'reconciliation', title: 'Reconciliation & Virtual DOM', content: `### Virtual DOM
+Lightweight JS representation of DOM. React diffs old vs new virtual DOM, applies minimal real DOM changes.
+
+### Reconciliation
+React compares element type. Same type → update props. Different type → unmount old, mount new. Keys help identify list items across re-renders.
+
+### Why keys matter
+Without keys, React may reuse wrong component state. Use stable unique IDs, not array index (for dynamic lists).` },
+    { id: 'server-state', title: 'Server State with React Query', content: `### Server state vs client state
+Server state: async, shared, can be stale. Client state: UI state, forms, modals.
+
+### React Query (TanStack Query)
+Caching, background refetch, stale-while-revalidate, optimistic updates, pagination, infinite scroll. Replaces most Redux use cases for API data.` },
   ],
   questions: [
     { id: 'react-q1', level: 'understanding', question: 'Why does a component re-render?', answer: 'State changes, props changes, parent re-renders (cascading), or context value changes. React.memo prevents re-render if props are shallow-equal.' },
     { id: 'react-q2', level: 'application', question: 'When should state move from component to Context to global store?', answer: 'Component: local UI state. Context: theme, auth, low-frequency shared state. Global store: complex state logic, frequent updates across many components, middleware needs (logging, persistence). Server state (React Query): API data with caching, refetching, optimistic updates.' },
     { id: 'react-q3', level: 'senior', question: 'How would you optimize a table with 10,000 rows?', answer: 'Virtualization (react-window/react-virtualized) — only render visible rows. Pagination or infinite scroll. Memoize row components. Avoid inline functions in render. Web Worker for sorting/filtering if expensive. Server-side pagination for data fetching.' },
+    { id: 'react-q4', level: 'understanding', question: 'What is the Virtual DOM and why does React use it?', answer: 'In-memory representation of UI. React diffs old vs new virtual DOM (reconciliation), then applies minimal changes to real DOM. Batches updates for performance. Not always faster than direct DOM manipulation for simple updates.' },
+    { id: 'react-q5', level: 'application', question: 'How do you handle race conditions in React data fetching?', answer: 'AbortController to cancel in-flight requests. React Query handles this automatically. Ignore stale responses by tracking request ID. useEffect cleanup function. Debounce rapid filter changes.' },
   ],
   seniorScenarios: [{ title: 'Dashboard architecture', scenario: 'Dashboard needs auth, DB data, real-time updates, and interactive filters.', approach: 'Server Components for initial data fetch. Client Components for interactive filters. WebSocket/SSE for real-time. React Query for server state with stale-while-revalidate. Auth in middleware.', keyConsiderations: ['Server vs client boundary', 'Caching strategy', 'Real-time connection management'] }],
   resources: [{ title: 'React Documentation', url: 'https://react.dev/', type: 'documentation' }],
@@ -209,10 +294,46 @@ export const networking = createModule({
   sections: [
     { id: 'request-lifecycle', title: 'What Happens When You Enter a URL', content: `1) DNS resolution (cache → recursive resolver → authoritative). 2) TCP handshake (SYN, SYN-ACK, ACK). 3) TLS handshake (certificate, key exchange). 4) HTTP request/response. 5) Connection pooling reuses TCP connections.` },
     { id: 'protocols', title: 'Protocol Comparison', content: `HTTP/1.1: text, one request per connection (or pipelining). HTTP/2: binary, multiplexing, header compression. HTTP/3: QUIC (UDP), faster connection setup, no head-of-line blocking. WebSocket: full-duplex persistent connection. gRPC: binary, HTTP/2, protobuf.` },
+    { id: 'dns', title: 'DNS Deep Dive', content: `### Resolution chain
+Browser cache → OS cache → Recursive resolver → Root → TLD → Authoritative.
+
+### Record types
+A (IPv4), AAAA (IPv6), CNAME (alias), MX (mail), TXT (verification), NS (nameserver).
+
+### TTL
+Time-to-live controls cache duration. Low TTL for fast failover, high TTL for performance.
+
+### DNS as bottleneck
+First request to new domain pays DNS latency. DNS prefetch, connection preconnect help.` },
+    { id: 'tls', title: 'TLS & HTTPS', content: `### TLS handshake (simplified)
+1. Client Hello (supported ciphers)
+2. Server Hello (chosen cipher + certificate)
+3. Key exchange
+4. Encrypted communication begins
+
+### Performance impact
+TLS adds 1-2 RTT to connection setup. TLS 1.3 reduces to 1 RTT. Session resumption (tickets) avoids full handshake.
+
+### Certificate chain
+Leaf cert → Intermediate CA → Root CA. Browser validates entire chain.` },
+    { id: 'load-balancing', title: 'Load Balancing & Proxies', content: `### Load balancer algorithms
+Round robin, weighted, least connections, IP hash, consistent hashing.
+
+### L4 vs L7
+L4 (transport): routes by IP/port, faster. L7 (application): routes by URL/header/cookie, smarter.
+
+### Reverse proxy
+Nginx, HAProxy, AWS ALB. SSL termination, caching, compression, rate limiting.
+
+### CDN
+Cache static assets at edge locations. Reduces latency, offloads origin server.` },
   ],
   questions: [
     { id: 'net-q1', level: 'understanding', question: 'TCP vs UDP?', answer: 'TCP: reliable, ordered, connection-oriented (HTTP, databases). UDP: unreliable, unordered, connectionless, lower latency (DNS, video streaming, gaming). Choose TCP when correctness matters, UDP when speed matters and you handle reliability.' },
     { id: 'net-q2', level: 'debugging', question: 'API is slow. How do you determine if latency is DNS, TCP, TLS, app, or DB?', answer: 'curl -w timing breakdown. DNS: dig +time. TCP: tcpdump or curl time_connect. TLS: curl time_appconnect. App: application metrics minus DB time. DB: query logs. Distributed tracing for full breakdown. Compare from different locations.' },
+    { id: 'net-q3', level: 'understanding', question: 'What happens during a TCP handshake?', answer: 'Three-way: SYN (client initiates) → SYN-ACK (server acknowledges + initiates) → ACK (client acknowledges). Establishes connection with sequence numbers. One RTT before data transfer.' },
+    { id: 'net-q4', level: 'application', question: 'HTTP/1.1 vs HTTP/2 vs HTTP/3?', answer: 'HTTP/1.1: text, head-of-line blocking, one request per connection. HTTP/2: binary, multiplexing, header compression, still TCP head-of-line blocking. HTTP/3: QUIC over UDP, no head-of-line blocking, faster connection setup.' },
+    { id: 'net-q5', level: 'senior', question: 'Design connection pooling for a high-traffic API.', answer: 'Pool size = expected concurrent requests × avg request time / target latency. Separate pools per downstream service. Idle timeout to close stale connections. Health check pooled connections. Monitor pool utilization, wait time, and connection errors.' },
   ],
   seniorScenarios: [{ title: 'Latency investigation', scenario: 'Users report 3s page load. Your API p50 is 100ms.', approach: 'Check DNS (slow resolver?). TLS (certificate chain?). CDN miss? Large payload? Client-side rendering? Third-party scripts? Geographic distance? Use RUM (Real User Monitoring) vs synthetic monitoring.', keyConsiderations: ['End-to-end vs server-side', 'Geographic factors', 'Client device/network'] }],
   resources: [{ title: 'High Performance Browser Networking', url: 'https://hpbn.co/', type: 'book' }],
@@ -337,10 +458,41 @@ export const security = createModule({
   sections: [
     { id: 'auth', title: 'Authentication & Authorization', content: `AuthN: who are you? (JWT, OAuth2, sessions). AuthZ: what can you do? (RBAC, ABAC). JWT: stateless but hard to revoke. Sessions: server-side state, easy revocation. Refresh tokens: httpOnly cookie, short-lived access tokens.` },
     { id: 'owasp', title: 'Common Vulnerabilities', content: `SQL Injection: parameterized queries. XSS: escape output, CSP headers. CSRF: SameSite cookies, CSRF tokens. IDOR: authorize every resource access. SSRF: validate URLs, block internal IPs. Rate limiting on all endpoints.` },
+    { id: 'jwt-deep', title: 'JWT & OAuth2 Deep Dive', content: `### JWT structure
+Header.Payload.Signature (base64). Signed with secret (HS256) or private key (RS256).
+
+### Access vs Refresh tokens
+Access: short-lived (15min), in memory. Refresh: long-lived, httpOnly cookie, rotate on use.
+
+### OAuth2 flows
+Authorization Code (web apps). Client Credentials (service-to-service). PKCE for mobile/SPA.
+
+### Token security
+Never store JWT in localStorage (XSS risk). Use httpOnly cookies. Rotate secrets. Short expiry. Revocation list for compromised tokens.` },
+    { id: 'api-security', title: 'API Security Checklist', content: `1. HTTPS everywhere (HSTS)
+2. Authentication on all endpoints
+3. Authorization per resource (not just authentication)
+4. Input validation (Pydantic, JSON schema)
+5. Rate limiting (per IP, per user, per endpoint)
+6. CORS whitelist (not *)
+7. Security headers (CSP, X-Frame-Options, X-Content-Type-Options)
+8. Secrets in vault (not env files in repo)
+9. Dependency scanning (Snyk, Dependabot)
+10. Audit logging for sensitive operations
+11. WAF at edge
+12. Principle of least privilege (IAM)` },
+    { id: 'cors-csrf', title: 'CORS & CSRF', content: `### CORS
+Browser security — blocks cross-origin requests by default. Server sends Access-Control-Allow-Origin. Preflight OPTIONS for non-simple requests. Never use * with credentials.
+
+### CSRF
+Attacker tricks user's browser into making authenticated request. Prevention: SameSite=Strict cookies, CSRF tokens, check Origin/Referer headers.` },
   ],
   questions: [
     { id: 'sec-q1', level: 'application', question: 'Users can modify another user\'s resource by changing the ID in the URL. How do you fix?', answer: 'IDOR vulnerability. Fix: authorize resource access in every endpoint (check resource.user_id == current_user.id). Test: automated tests with different user contexts. Prevent: use UUIDs instead of sequential IDs, implement RBAC middleware.' },
     { id: 'sec-q2', level: 'senior', question: 'How do you secure an API?', answer: 'HTTPS everywhere. Authentication (JWT/OAuth2). Authorization on every endpoint. Input validation. Rate limiting. CORS properly configured. Security headers (CSP, HSTS). Secrets in vault, not code. Audit logging. Dependency scanning. WAF at edge.' },
+    { id: 'sec-q3', level: 'understanding', question: 'JWT vs session-based auth?', answer: 'JWT: stateless, scalable, hard to revoke, larger payload. Session: server-side state, easy revocation, requires session store (Redis), sticky sessions or shared store for scaling. Use JWT for microservices/SPAs. Use sessions for traditional web apps.' },
+    { id: 'sec-q4', level: 'application', question: 'How do you prevent SQL injection?', answer: 'Parameterized queries / prepared statements (never string concatenation). ORM with proper escaping. Input validation. Least privilege DB user (no DROP permissions). WAF as defense in depth.' },
+    { id: 'sec-q5', level: 'production', question: 'How do you prevent token replay attacks?', answer: 'Short token expiry. Refresh token rotation. Bind token to IP/device fingerprint. JTI (JWT ID) blacklist in Redis. One-time use tokens for sensitive operations.' },
   ],
   seniorScenarios: [],
   resources: [{ title: 'OWASP Top 10', url: 'https://owasp.org/www-project-top-ten/', type: 'documentation' }],
